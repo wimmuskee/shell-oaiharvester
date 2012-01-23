@@ -9,6 +9,15 @@
 	
 	<xsl:template match="/">
 		<xsl:choose>
+			<xsl:when test="$data='recordpath'">
+  				<xsl:value-of select="/cfg:harvesterconfig/cfg:recordpath"/>
+			</xsl:when>
+			<xsl:when test="$data='temppath'">
+  				<xsl:value-of select="/cfg:harvesterconfig/cfg:temppath"/>
+			</xsl:when>
+			<xsl:when test="$data='wgetopts'">
+  				<xsl:value-of select="/cfg:harvesterconfig/cfg:wgetopts"/>
+			</xsl:when>
 			<xsl:when test="$data='baseurl'">
   				<xsl:value-of select="/cfg:harvesterconfig/cfg:repository[@id=$repository]/cfg:baseurl"/>
 			</xsl:when>

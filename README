@@ -1,1 +1,14 @@
-The OAI-PMH Shell Harvester is able to harvest OAI-PMH targets.
+The OAI-PMH Shell Harvester is able to harvest OAI-PMH targets. It supports multiple configurable targets which can be updated individually. Deletes are not supported fully, they are saved as empty files.
+
+Using shell-harvester:
+
+1. Configure the harvester
+   Edit the paths in the config.xml file, 
+   records are stored in <recordpath>/<repository_id>/harvested .
+
+2. Configure a repository
+   Edit a repository in the config.xml file,
+   a set and a conditional is not required.
+
+3. Run the harvester
+   $ ./harvester.sh <repository_id>

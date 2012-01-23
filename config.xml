@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <harvesterconfig xmlns="http://github.com/wimmuskee/shell-harvester/">
+	<recordpath>/var/shell-harvester</recordpath>
+	<temppath>/tmp/shell-harvester</temppath>
+	<wgetopts>--limit-rate=200k</wgetopts>
 	<repository id="repository_id">
 		<baseurl>http://example.org/oaiproviderr</baseurl>
 		<metadataprefix>lom</metadataprefix>

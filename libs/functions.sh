@@ -16,7 +16,7 @@ function getRecords
 		status=$(xsltproc --stringparam data headerstatus --param record_nr ${count} libs/retrieveData.xsl oaipage.xml)
 
 		if [ "${status}" == "deleted" ]; then
-			touch "records/${REPOSITORY}/${DELETED}//${name}"
+			touch "${RECORDPATH}/${REPOSITORY}/deleted/${name}"
 		else
 			# Store temporary record
 			xsltproc --param record_nr ${count} libs/retrieveRecord.xsl oaipage.xml > ${TMP}/harvested.xml
@@ -35,7 +35,7 @@ function getRecords
 
 			# store record if it passed the conditional test
 			if [ -f ${TMP}/passed-conditional.xml ]; then
-				mv ${TMP}/passed-conditional.xml "records/${REPOSITORY}/${STORAGE}/${name}"
+				mv ${TMP}/passed-conditional.xml "${RECORDPATH}/${REPOSITORY}/harvested/${name}"
 			fi
 
 			# do translate here if translate is true
