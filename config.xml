@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<harvesterconfig xmlns="http://github.com/wimmuskee/shell-harvester/">
+	<repository id="repository_id">
+		<baseurl>http://example.org/oaiproviderr</baseurl>
+		<metadataprefix>lom</metadataprefix>
+		<set>test</set>
+		<conditional>only-context-po.xsl</conditional>
+	</repository>
+</harvesterconfig>
