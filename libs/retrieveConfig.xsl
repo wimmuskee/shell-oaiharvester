@@ -30,6 +30,9 @@
 			<xsl:when test="$data='conditional'">
   				<xsl:value-of select="/cfg:harvesterconfig/cfg:repository[@id=$repository]/cfg:conditional"/>
 			</xsl:when>
+			<xsl:when test="$data='repository_path'">
+  				<xsl:value-of select="/cfg:harvesterconfig/cfg:repository[@id=$repository]/cfg:recordpath"/>
+			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
 </xsl:stylesheet>

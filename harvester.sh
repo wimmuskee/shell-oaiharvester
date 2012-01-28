@@ -3,7 +3,7 @@
 source libs/functions.sh
 
 # Reading repository id
-if [ ! -z $1 ] || [ "$1" != "" ]; then
+if [ ! -z $1 ]; then
 	REPOSITORY=$1
 else
 	echo "No repository id provided"
@@ -19,25 +19,30 @@ if [ -f config.xml ]; then
 	PREFIX=$(xsltproc --stringparam data metadataprefix --stringparam repository ${REPOSITORY} libs/retrieveConfig.xsl config.xml)
 	SET=$(xsltproc --stringparam data set --stringparam repository ${REPOSITORY} libs/retrieveConfig.xsl config.xml)
 	CONDITIONAL=$(xsltproc --stringparam data conditional --stringparam repository ${REPOSITORY} libs/retrieveConfig.xsl config.xml)
+	REPOSITORY_RECORDPATH="$(xsltproc --stringparam data repository_path --stringparam repository ${REPOSITORY} libs/retrieveConfig.xsl config.xml)
 else
 	echo "No repository config found."
 	exit 1
 fi
 
 # checking repository
-if [ "${REPOSITORY}" == "" ]; then
-	echo "No repository found by that name"
+if [ "${BASEURL}" == "" ]; then
+	echo "No baseurl found for repository: ${REPOSITORY}"
 	exit 1
 fi
 
-# Making sure the repository storage dirs exists
-if [ ! -d "${RECORDPATH}/${REPOSITORY}/harvested" ]; then
-	echo "Creating repository storage"
-	mkdir -p "${RECORDPATH}/${REPOSITORY}/harvested"
-	mkdir -p "${RECORDPATH}/${REPOSITORY}/deleted"
+# determing repository record path
+if [ "${REPOSITORY_RECORDPATH}" == "" ]; then
+	REPOSITORY_RECORDPATH="${RECORDPATH}/${REPOSITORY}"
 fi
 
+# Making sure the repository storage and tmp dirs exists
+echo "Creating repository storage in: ${REPOSITORY_RECORDPATH}"
+mkdir -p "${REPOSITORY_RECORDPATH}/harvested"
+mkdir -p "${REPOSITORY_RECORDPATH}/deleted"
 mkdir -p ${TMP}
+
+
 
 # Sets the initial harvest uri, add from if timestamp was found
 if [ "${SET}" == "" ]; then
@@ -66,13 +71,13 @@ fi
 # Now, get the initial page and the records
 # if there is a resumptionToken, retrieve other pages
 wget ${WGET_OPTS} ${URL} -O oaipage.xml
-getRecords "${RECORDPATH}/${REPOSITORY}/${CONDITIONAL}"
+getRecords "${REPOSITORY_RECORDPATH}/${CONDITIONAL}"
 RESUMPTION=$(xsltproc --stringparam data resumptiontoken libs/retrieveData.xsl oaipage.xml)
 
 while [ "${RESUMPTION}" != "" ]; do
 	URL="${BASEURL}?verb=ListRecords&resumptionToken=${RESUMPTION}"
 	wget ${WGET_OPTS} ${URL} -O oaipage.xml
-	getRecords "${RECORDPATH}/${REPOSITORY}/${CONDITIONAL}"
+	getRecords "${REPOSITORY_RECORDPATH}/${CONDITIONAL}"
 	RESUMPTION=$(xsltproc --stringparam data resumptiontoken libs/retrieveData.xsl oaipage.xml)
 done
 

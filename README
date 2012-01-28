@@ -8,7 +8,7 @@ Using shell-harvester:
 
 2. Configure a repository
    Edit a repository in the config.xml file,
-   a set and a conditional is not required.
+   set, conditional and recordpath are not required.
 
 3. Run the harvester
    $ ./harvester.sh <repository_id>

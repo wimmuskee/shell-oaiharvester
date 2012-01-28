@@ -8,5 +8,6 @@
 		<metadataprefix>lom</metadataprefix>
 		<set>test</set>
 		<conditional>only-context-po.xsl</conditional>
+		<recordpath>/tmp/records/repository_id</recordpath>
 	</repository>
 </harvesterconfig>
