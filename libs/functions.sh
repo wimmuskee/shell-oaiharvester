@@ -17,6 +17,7 @@ function getRecords
 
 		if [ "${status}" == "deleted" ]; then
 			touch "${REPOSITORY_RECORDPATH}/deleted/${name}"
+			rm -f "${REPOSITORY_RECORDPATH}/harvested/${name}"
 		else
 			# Store temporary record
 			xsltproc --param record_nr ${count} libs/retrieveRecord.xsl oaipage.xml > ${TMP}/harvested.xml

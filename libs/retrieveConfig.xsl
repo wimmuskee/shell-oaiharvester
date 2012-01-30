@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:cfg="https://github.com/wimmuskee/shell-harvester/"
+	xmlns:cfg="http://github.com/wimmuskee/shell-harvester/"
 	version="1.0">
 	<xsl:output method="text" omit-xml-declaration="yes"/>
 	<xsl:param name="data"/>

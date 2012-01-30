@@ -19,7 +19,7 @@ if [ -f config.xml ]; then
 	PREFIX=$(xsltproc --stringparam data metadataprefix --stringparam repository ${REPOSITORY} libs/retrieveConfig.xsl config.xml)
 	SET=$(xsltproc --stringparam data set --stringparam repository ${REPOSITORY} libs/retrieveConfig.xsl config.xml)
 	CONDITIONAL=$(xsltproc --stringparam data conditional --stringparam repository ${REPOSITORY} libs/retrieveConfig.xsl config.xml)
-	REPOSITORY_RECORDPATH="$(xsltproc --stringparam data repository_path --stringparam repository ${REPOSITORY} libs/retrieveConfig.xsl config.xml)
+	REPOSITORY_RECORDPATH=$(xsltproc --stringparam data repository_path --stringparam repository ${REPOSITORY} libs/retrieveConfig.xsl config.xml)
 else
 	echo "No repository config found."
 	exit 1
