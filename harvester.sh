@@ -18,6 +18,8 @@ if [ -f config.xml ]; then
 	BASEURL=$(xsltproc --stringparam data baseurl --stringparam repository ${REPOSITORY} libs/retrieveConfig.xsl config.xml)
 	PREFIX=$(xsltproc --stringparam data metadataprefix --stringparam repository ${REPOSITORY} libs/retrieveConfig.xsl config.xml)
 	SET=$(xsltproc --stringparam data set --stringparam repository ${REPOSITORY} libs/retrieveConfig.xsl config.xml)
+	FROM=$(xsltproc --stringparam data from --stringparam repository ${REPOSITORY} libs/retrieveConfig.xsl config.xml)
+	UNTIL=$(xsltproc --stringparam data until --stringparam repository ${REPOSITORY} libs/retrieveConfig.xsl config.xml)
 	CONDITIONAL=$(xsltproc --stringparam data conditional --stringparam repository ${REPOSITORY} libs/retrieveConfig.xsl config.xml)
 	REPOSITORY_RECORDPATH=$(xsltproc --stringparam data repository_path --stringparam repository ${REPOSITORY} libs/retrieveConfig.xsl config.xml)
 else
@@ -42,18 +44,21 @@ mkdir -p "${REPOSITORY_RECORDPATH}/harvested"
 mkdir -p "${REPOSITORY_RECORDPATH}/deleted"
 mkdir -p ${TMP}
 
-
-
-# Sets the initial harvest uri, add from if timestamp was found
-if [ "${SET}" == "" ]; then
-	URL="${BASEURL}?verb=ListRecords&metadataPrefix=${PREFIX}"
-else
-	URL="${BASEURL}?verb=ListRecords&metadataPrefix=${PREFIX}&set=${SET}"
+# Setting other arguments if set in config.
+if [ "${SET}" != "" ]; then
+   URI_SET="&set=${SET}"
+fi
+if [ "${FROM}" != "" ]; then
+   URI_FROM="&from=${FROM}"
+fi
+if [ "${UNTIL}" != "" ]; then
+   URI_UNTIL="&until=$UNTIL"
 fi
 
 # Checks for a last harvest timestamp, and uses it
 # according to the granularity settings
-repository_timestamp="records/${REPOSITORY}/lasttimestamp.txt"
+# Overwrites repository from config setting.
+repository_timestamp="${REPOSITORY_RECORDPATH}/lasttimestamp.txt"
 if [ -f ${repository_timestamp} ]; then
 	# check out identify for datetime granularity
 	wget "${BASEURL}?verb=Identify" -O identify.xml
@@ -64,9 +69,11 @@ if [ -f ${repository_timestamp} ]; then
 	else
 		timestamp=$(cat ${repository_timestamp} | awk -F "T" '{print $1}')
 	fi
-	URL="${URL}&from=${timestamp}"
+	URI_FROM="&from=${timestamp}"
 fi
 
+# Sets the initial harvest uri
+URL="${BASEURL}?verb=ListRecords&metadataPrefix=${PREFIX}${URI_SET}${URI_FROM}${URI_UNTIL}"
 
 # Now, get the initial page and the records
 # if there is a resumptionToken, retrieve other pages

@@ -9,6 +9,7 @@
 	
 	<xsl:template match="/">
 		<xsl:choose>
+			<!-- Generic options -->
 			<xsl:when test="$data='recordpath'">
   				<xsl:value-of select="/cfg:harvesterconfig/cfg:recordpath"/>
 			</xsl:when>
@@ -18,6 +19,7 @@
 			<xsl:when test="$data='wgetopts'">
   				<xsl:value-of select="/cfg:harvesterconfig/cfg:wgetopts"/>
 			</xsl:when>
+			<!-- Repository options -->
 			<xsl:when test="$data='baseurl'">
   				<xsl:value-of select="/cfg:harvesterconfig/cfg:repository[@id=$repository]/cfg:baseurl"/>
 			</xsl:when>
@@ -26,6 +28,12 @@
 			</xsl:when>
 			<xsl:when test="$data='set'">
   				<xsl:value-of select="/cfg:harvesterconfig/cfg:repository[@id=$repository]/cfg:set"/>
+			</xsl:when>
+			<xsl:when test="$data='from'">
+  				<xsl:value-of select="/cfg:harvesterconfig/cfg:repository[@id=$repository]/cfg:from"/>
+			</xsl:when>
+			<xsl:when test="$data='until'">
+  				<xsl:value-of select="/cfg:harvesterconfig/cfg:repository[@id=$repository]/cfg:until"/>
 			</xsl:when>
 			<xsl:when test="$data='conditional'">
   				<xsl:value-of select="/cfg:harvesterconfig/cfg:repository[@id=$repository]/cfg:conditional"/>

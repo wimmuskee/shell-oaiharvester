@@ -4,9 +4,11 @@
 	<temppath>/tmp/shell-harvester</temppath>
 	<wgetopts>--limit-rate=200k</wgetopts>
 	<repository id="repository_id">
-		<baseurl>http://example.org/oaiproviderr</baseurl>
+		<baseurl>http://example.org/oaiprovider</baseurl>
 		<metadataprefix>lom</metadataprefix>
 		<set>test</set>
+		<from>2012-02-29</from>
+		<until>2012-03-01</until>
 		<conditional>only-context-po.xsl</conditional>
 		<recordpath>/tmp/records/repository_id</recordpath>
 	</repository>
