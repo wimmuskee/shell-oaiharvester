@@ -61,7 +61,7 @@ fi
 repository_timestamp="${REPOSITORY_RECORDPATH}/lasttimestamp.txt"
 if [ -f ${repository_timestamp} ]; then
 	# check out identify for datetime granularity
-	wget "${BASEURL}?verb=Identify" -O identify.xml
+	wget ${WGET_OPTS} "${BASEURL}?verb=Identify" -O identify.xml
 	granularity=$(xsltproc --stringparam data granularity libs/retrieveData.xsl identify.xml)
 
 	if [ "${granularity}" == "YYYY-MM-DDThh:mm:ssZ" ]; then
