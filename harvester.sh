@@ -14,6 +14,7 @@ fi
 if [ -f config.xml ]; then
 	RECORDPATH=$(xsltproc --stringparam data recordpath libs/retrieveConfig.xsl config.xml)
 	TMP=$(xsltproc --stringparam data temppath libs/retrieveConfig.xsl config.xml)
+	LOGFILE=$(xsltproc --stringparam data logfile libs/retrieveConfig.xsl config.xml)
 	WGET_OPTS=$(xsltproc --stringparam data wgetopts libs/retrieveConfig.xsl config.xml)
 	BASEURL=$(xsltproc --stringparam data baseurl --stringparam repository ${REPOSITORY} libs/retrieveConfig.xsl config.xml)
 	PREFIX=$(xsltproc --stringparam data metadataprefix --stringparam repository ${REPOSITORY} libs/retrieveConfig.xsl config.xml)
@@ -43,6 +44,9 @@ echo "Creating repository storage in: ${REPOSITORY_RECORDPATH}"
 mkdir -p "${REPOSITORY_RECORDPATH}/harvested"
 mkdir -p "${REPOSITORY_RECORDPATH}/deleted"
 mkdir -p ${TMP}
+touch ${LOGFILE}
+rm -f oaipage.xml identify.xml
+
 
 # Setting other arguments if set in config.
 if [ "${SET}" != "" ]; then
@@ -77,14 +81,12 @@ URL="${BASEURL}?verb=ListRecords&metadataPrefix=${PREFIX}${URI_SET}${URI_FROM}${
 
 # Now, get the initial page and the records
 # if there is a resumptionToken, retrieve other pages
-wget ${WGET_OPTS} ${URL} -O oaipage.xml
-getRecords "${REPOSITORY_RECORDPATH}/${CONDITIONAL}"
+getRecords
 RESUMPTION=$(xsltproc --stringparam data resumptiontoken libs/retrieveData.xsl oaipage.xml)
 
 while [ "${RESUMPTION}" != "" ]; do
 	URL="${BASEURL}?verb=ListRecords&resumptionToken=${RESUMPTION}"
-	wget ${WGET_OPTS} ${URL} -O oaipage.xml
-	getRecords "${REPOSITORY_RECORDPATH}/${CONDITIONAL}"
+	getRecords
 	RESUMPTION=$(xsltproc --stringparam data resumptiontoken libs/retrieveData.xsl oaipage.xml)
 done
 

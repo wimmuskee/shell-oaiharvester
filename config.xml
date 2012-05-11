@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <harvesterconfig xmlns="http://github.com/wimmuskee/shell-harvester/">
+	<!-- default record save location -->
 	<recordpath>/var/shell-harvester</recordpath>
+	<!-- temporary files are stored here -->
 	<temppath>/tmp/shell-harvester</temppath>
-	<wgetopts>--limit-rate=200k</wgetopts>
+	<!-- location of log file -->
+	<logfile>/tmp/shell-harvester/log.csv</logfile>
+	<!-- options for the wget command -->
+	<wgetopts>--quiet --limit-rate=200k</wgetopts>
 	<repository id="repository_id">
 		<baseurl>http://example.org/oaiprovider</baseurl>
 		<metadataprefix>lom</metadataprefix>

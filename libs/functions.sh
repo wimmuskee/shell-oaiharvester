@@ -3,10 +3,20 @@
 # getRecords function
 function getRecords
 {
-	local conditional=$1
+	# download the oaipage
+	local starttime=$(date +%s%N | cut -b1-13)
+	wget ${WGET_OPTS} ${URL} -O oaipage.xml
+	local endtime=$(date +%s%N | cut -b1-13)
+	local downloadtime=$(echo "scale=3; ($endtime - $starttime)/1000" | bc)
+
+
+	# process the downloaded xml
+	local starttime=$(date +%s%N | cut -b1-13)
+	local conditional="${REPOSITORY_RECORDPATH}/${CONDITIONAL}"
 	local count=1
 	local record_count=$(xsltproc --stringparam data record_count libs/retrieveData.xsl oaipage.xml)
 
+	
 	while [ ${count} -le ${record_count} ]; do
 		# get oai identifier
 		identifier=$(xsltproc --stringparam data identifier --param record_nr ${count} libs/retrieveData.xsl oaipage.xml | sed s/\\//\%2F/g | sed s/\&/\%26/g | sed s/\ /\%20/g)
@@ -50,5 +60,12 @@ function getRecords
 
 		count=$(( ${count} + 1 ))
 	done
+	
+	local endtime=$(date +%s%N | cut -b1-13)
+	local processtime=$(echo "scale=3; ($endtime - $starttime)/1000" | bc)
+
+
+	# write logline
+	echo "$(date '+%F %T'),$downloadtime,$processtime,$record_count" >> ${LOGFILE}
 }
 

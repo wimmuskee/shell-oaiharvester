@@ -16,6 +16,9 @@
 			<xsl:when test="$data='temppath'">
   				<xsl:value-of select="/cfg:harvesterconfig/cfg:temppath"/>
 			</xsl:when>
+			<xsl:when test="$data='logfile'">
+  				<xsl:value-of select="/cfg:harvesterconfig/cfg:logfile"/>
+			</xsl:when>
 			<xsl:when test="$data='wgetopts'">
   				<xsl:value-of select="/cfg:harvesterconfig/cfg:wgetopts"/>
 			</xsl:when>
