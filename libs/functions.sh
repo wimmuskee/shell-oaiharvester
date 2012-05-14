@@ -27,7 +27,7 @@ function getRecords
 
 		if [ "${status}" == "deleted" ]; then
 			touch "${REPOSITORY_RECORDPATH}/deleted/${name}"
-			rm -f "${REPOSITORY_RECORDPATH}/harvested/${name}"
+			rm -f "${REPOSITORY_RECORDPATH}/harvested/${name}" > /dev/null 2>&1
 		else
 			# Store temporary record
 			xsltproc --param record_nr ${count} libs/retrieveRecord.xsl oaipage.xml > ${TMP}/harvested.xml
@@ -66,6 +66,6 @@ function getRecords
 
 
 	# write logline
-	echo "$(date '+%F %T'),$downloadtime,$processtime,$record_count" >> ${LOGFILE}
+	echo "$(date '+%F %T'),REPOSITORY,$record_count,$downloadtime,$processtime" >> ${LOGFILE}
 }
 

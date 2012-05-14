@@ -45,7 +45,7 @@ mkdir -p "${REPOSITORY_RECORDPATH}/harvested"
 mkdir -p "${REPOSITORY_RECORDPATH}/deleted"
 mkdir -p ${TMP}
 touch ${LOGFILE}
-rm -f oaipage.xml identify.xml
+rm -f oaipage.xml identify.xml > /dev/null 2>&1
 
 
 # Setting other arguments if set in config.
