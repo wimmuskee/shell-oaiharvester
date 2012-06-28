@@ -1,5 +1,9 @@
 The OAI-PMH Shell Harvester is able to harvest OAI-PMH targets. It supports multiple configurable targets which can be updated individually. Deletes are not supported fully, they are saved as empty files.
 
+Installing shell-harvester:
+ - git clone git://github.com/wimmuskee/shell-harvester.git
+ - dependencies: xsltproc, bc
+
 Using shell-harvester:
 
 1. Configure the harvester

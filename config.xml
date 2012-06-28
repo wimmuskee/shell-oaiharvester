@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<harvesterconfig xmlns="http://github.com/wimmuskee/shell-harvester/">
+<config xmlns="http://github.com/wimmuskee/shell-harvester/">
 	<!-- default record save location -->
 	<recordpath>/var/shell-harvester</recordpath>
 	<!-- temporary files are stored here -->
@@ -17,4 +17,4 @@
 		<conditional>only-context-po.xsl</conditional>
 		<recordpath>/tmp/records/repository_id</recordpath>
 	</repository>
-</harvesterconfig>
+</config>

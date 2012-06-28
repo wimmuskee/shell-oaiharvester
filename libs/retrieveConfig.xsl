@@ -11,40 +11,39 @@
 		<xsl:choose>
 			<!-- Generic options -->
 			<xsl:when test="$data='recordpath'">
-  				<xsl:value-of select="/cfg:harvesterconfig/cfg:recordpath"/>
+  				<xsl:value-of select="/cfg:config/cfg:recordpath"/>
 			</xsl:when>
 			<xsl:when test="$data='temppath'">
-  				<xsl:value-of select="/cfg:harvesterconfig/cfg:temppath"/>
+  				<xsl:value-of select="/cfg:config/cfg:temppath"/>
 			</xsl:when>
 			<xsl:when test="$data='logfile'">
-  				<xsl:value-of select="/cfg:harvesterconfig/cfg:logfile"/>
+  				<xsl:value-of select="/cfg:config/cfg:logfile"/>
 			</xsl:when>
 			<xsl:when test="$data='wgetopts'">
-  				<xsl:value-of select="/cfg:harvesterconfig/cfg:wgetopts"/>
+  				<xsl:value-of select="/cfg:config/cfg:wgetopts"/>
 			</xsl:when>
 			<!-- Repository options -->
 			<xsl:when test="$data='baseurl'">
-  				<xsl:value-of select="/cfg:harvesterconfig/cfg:repository[@id=$repository]/cfg:baseurl"/>
+  				<xsl:value-of select="/cfg:config/cfg:repository[@id=$repository]/cfg:baseurl"/>
 			</xsl:when>
 			<xsl:when test="$data='metadataprefix'">
-  				<xsl:value-of select="/cfg:harvesterconfig/cfg:repository[@id=$repository]/cfg:metadataprefix"/>
+  				<xsl:value-of select="/cfg:config/cfg:repository[@id=$repository]/cfg:metadataprefix"/>
 			</xsl:when>
 			<xsl:when test="$data='set'">
-  				<xsl:value-of select="/cfg:harvesterconfig/cfg:repository[@id=$repository]/cfg:set"/>
+  				<xsl:value-of select="/cfg:config/cfg:repository[@id=$repository]/cfg:set"/>
 			</xsl:when>
 			<xsl:when test="$data='from'">
-  				<xsl:value-of select="/cfg:harvesterconfig/cfg:repository[@id=$repository]/cfg:from"/>
+  				<xsl:value-of select="/cfg:config/cfg:repository[@id=$repository]/cfg:from"/>
 			</xsl:when>
 			<xsl:when test="$data='until'">
-  				<xsl:value-of select="/cfg:harvesterconfig/cfg:repository[@id=$repository]/cfg:until"/>
+  				<xsl:value-of select="/cfg:config/cfg:repository[@id=$repository]/cfg:until"/>
 			</xsl:when>
 			<xsl:when test="$data='conditional'">
-  				<xsl:value-of select="/cfg:harvesterconfig/cfg:repository[@id=$repository]/cfg:conditional"/>
+  				<xsl:value-of select="/cfg:config/cfg:repository[@id=$repository]/cfg:conditional"/>
 			</xsl:when>
 			<xsl:when test="$data='repository_path'">
-  				<xsl:value-of select="/cfg:harvesterconfig/cfg:repository[@id=$repository]/cfg:recordpath"/>
+  				<xsl:value-of select="/cfg:config/cfg:repository[@id=$repository]/cfg:recordpath"/>
 			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
 </xsl:stylesheet>
-
