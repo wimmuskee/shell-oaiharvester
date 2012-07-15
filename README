@@ -1,7 +1,7 @@
-The OAI-PMH Shell Harvester is able to harvest OAI-PMH targets. It supports multiple configurable targets which can be updated individually. Deletes are not supported fully, they are saved as empty files.
+The OAI-PMH Shell Harvester is able to harvest OAI-PMH targets. It supports multiple configurable targets which can be updated individually. Deletes are not supported fully, they are saved as empty files. Optionally, by providing the extra ListIdentifiers option, only the idenfiers will be retrieved.
 
 Installing shell-harvester:
- - git clone git://github.com/wimmuskee/shell-harvester.git
+ - git clone git://github.com/wimmuskee/shell-oaiharvester.git
  - dependencies: xsltproc, bc
 
 Using shell-harvester:
@@ -15,4 +15,7 @@ Using shell-harvester:
    set, conditional and recordpath are not required.
 
 3. Run the harvester
-   $ ./harvester.sh <repository_id>
+   $ ./oaiharvester <repository_id>
+
+4. Only retrieve identifiers
+   $ ./oaiharvester <repository_id> ListIdentifiers

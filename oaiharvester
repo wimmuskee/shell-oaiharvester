@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# copyright 2012 Wim Muskee <wimmuskee@gmail.com>    
+# Copyright 2012 Wim Muskee <wimmuskee@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,6 +22,14 @@ if [ ! -z $1 ]; then
 else
 	echo "No repository id provided"
 	exit 1
+fi
+
+# optionally override verb
+VERB="ListRecords"
+if [ ! -z $2 ]; then
+	if [ "$2" == "ListIdentifiers" ]; then
+		VERB=$2
+	fi
 fi
 
 # Reading oai repository info
@@ -91,7 +99,7 @@ if [ -f ${repository_timestamp} ]; then
 fi
 
 # Sets the initial harvest uri
-URL="${BASEURL}?verb=ListRecords&metadataPrefix=${PREFIX}${URI_SET}${URI_FROM}${URI_UNTIL}"
+URL="${BASEURL}?verb=${VERB}&metadataPrefix=${PREFIX}${URI_SET}${URI_FROM}${URI_UNTIL}"
 
 # Now, get the initial page and the records
 # if there is a resumptionToken, retrieve other pages
@@ -99,7 +107,7 @@ getRecords
 RESUMPTION=$(xsltproc --stringparam data resumptiontoken libs/retrieveData.xsl oaipage.xml)
 
 while [ "${RESUMPTION}" != "" ]; do
-	URL="${BASEURL}?verb=ListRecords&resumptionToken=${RESUMPTION}"
+	URL="${BASEURL}?verb=${VERB}&resumptionToken=${RESUMPTION}"
 	getRecords
 	RESUMPTION=$(xsltproc --stringparam data resumptiontoken libs/retrieveData.xsl oaipage.xml)
 done
