@@ -66,6 +66,6 @@ function getRecords
 
 
 	# write logline
-	echo "$(date '+%F %T'),REPOSITORY,$record_count,$downloadtime,$processtime" >> ${LOGFILE}
+	echo "$(date '+%F %T'),$REPOSITORY,$record_count,$downloadtime,$processtime" >> ${LOGFILE}
 }
 
