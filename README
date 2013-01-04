@@ -1,21 +1,38 @@
-The OAI-PMH Shell Harvester is able to harvest OAI-PMH targets. It supports multiple configurable targets which can be updated individually. Optionally, by providing the extra ListIdentifiers option, only the idenfiers will be retrieved.
+The OAI-PMH Shell Harvester is able to harvest OAI-PMH targets. It supports multiple configurable targets which can be updated individually. Furthermore, it is able to execute a preset command for each record it updates or deletes.
 
 Installing shell-harvester:
- - git clone git://github.com/wimmuskee/shell-oaiharvester.git
  - dependencies: xsltproc, bc
+ - git clone git://github.com/wimmuskee/shell-oaiharvester.git
+ - cp oaiharvester /usr/bin/oaiharvester
+ - mkdir /usr/share/shell-oaiharvester
+ - cp libs/* /usr/share/shell-oaiharvester/.
+ - cp config.xml /etc/shell-oaiharvester/config.xml
 
 Using shell-harvester:
 
 1. Configure the harvester
    Edit the paths in the config.xml file, 
-   records are stored in <recordpath>/<repository_id>/harvested .
+   records are stored in <recordpath>/<repository_id> .
 
 2. Configure a repository
-   Edit a repository in the config.xml file,
-   set, conditional and recordpath are not required.
+   Edit a repository in the config file. By default, the example file
+   in /etc/shell-oaiprovider is used. You use your own by calling:
+   $ oaiharvester -c <config file>
+
+   Some notes on the options:
+    - deletecmd: executed before a record is deleted, optional
+    - updatecmd: executed after a record is updated, optional
+      - ${name} holds the identifier
+      - ${path} holds the absolute path of the record
+    - set, from, until, conditional and recordpath are optional
 
 3. Run the harvester
-   $ ./oaiharvester -r <repository_id>
+   $ oaiharvester -r <repository_id>
 
 4. Only retrieve identifiers (doesn't work)
-   $ ./oaiharvester -r <repository_id> -n
+   $ oaiharvester -r <repository_id> -n
+
+*. Unless customized, the log file of the harvest process is stored at
+   /tmp/shell-harvester/log.csv. The logger uses a simple csv format with
+   a line for each downloaded page.
+   YYYY-MM-DD HH:MM:SS,repository,record count,download time, process time
