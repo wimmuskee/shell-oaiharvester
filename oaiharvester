@@ -16,7 +16,7 @@
 
 source libs/functions.sh
 
-VERSION="0.8"
+VERSION="0.8.1"
 VERB="ListRecords"
 
 function usage {
@@ -69,25 +69,31 @@ if [ -f config.xml ]; then
 	CONDITIONAL=$(xsltproc --stringparam data conditional --stringparam repository ${REPOSITORY} libs/retrieveConfig.xsl config.xml)
 	REPOSITORY_RECORDPATH=$(xsltproc --stringparam data repository_path --stringparam repository ${REPOSITORY} libs/retrieveConfig.xsl config.xml)
 else
-	echo "No repository config found."
+	echo "Error: No repository config found."
 	exit 1
 fi
 
-# checking repository
-if [ "${BASEURL}" == "" ]; then
-	echo "No baseurl found for repository: ${REPOSITORY}"
+# checking required values
+if [ -z ${BASEURL} ]; then
+	echo "Error: No baseurl found for repository: ${REPOSITORY}"
 	exit 1
 fi
 
-# determing repository record path
-if [ "${REPOSITORY_RECORDPATH}" == "" ]; then
-	REPOSITORY_RECORDPATH="${RECORDPATH}/${REPOSITORY}"
+if [ -z ${PREFIX} ]; then
+        echo "Error: No prefix found for repository: ${REPOSITORY}"
+        exit 1
 fi
+
+# Set some sane defaults
+RECORDPATH=${RECORDPATH:-/tmp}
+TMP=${TMP:-/tmp}
+LOGFILE=${LOG:-/tmp/oaiharvester-log.csv}
+REPOSITORY_RECORDPATH=${REPOSITORY_RECORDPATH:-${RECORDPATH}/${REPOSITORY}}
+
 
 # Making sure the repository storage and tmp dirs exists
 echo "Creating repository storage in: ${REPOSITORY_RECORDPATH}"
-mkdir -p "${REPOSITORY_RECORDPATH}/harvested"
-mkdir -p "${REPOSITORY_RECORDPATH}/deleted"
+mkdir -p ${REPOSITORY_RECORDPATH}
 mkdir -p ${TMP}
 touch ${LOGFILE}
 rm -f oaipage.xml identify.xml > /dev/null 2>&1
@@ -123,6 +129,7 @@ fi
 
 # Sets the initial harvest uri
 URL="${BASEURL}?verb=${VERB}&metadataPrefix=${PREFIX}${URI_SET}${URI_FROM}${URI_UNTIL}"
+echo "Starting harvest from: ${URL}"
 
 # Now, get the initial page and the records
 # if there is a resumptionToken, retrieve other pages

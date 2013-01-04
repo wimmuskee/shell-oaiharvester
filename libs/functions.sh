@@ -23,7 +23,7 @@ function getRecords
 		local name="${identifier}"
 		local namemd5=$(echo "${name}" | md5sum)
 		local storedir=${namemd5:0:2}
-		local path="${REPOSITORY_RECORDPATH}/harvested/${storedir}/${name}"
+		local path="${REPOSITORY_RECORDPATH}/${storedir}/${name}"
 		
 		# check if status is deleted
 		local status=$(xsltproc --stringparam data headerstatus --param record_nr ${count} libs/retrieveData.xsl oaipage.xml)
@@ -51,7 +51,7 @@ function getRecords
 
 			# store record if it passed the conditional test
 			if [ -f ${TMP}/passed-conditional.xml ]; then
-				mkdir -p "${REPOSITORY_RECORDPATH}/harvested/${storedir}"
+				mkdir -p "${REPOSITORY_RECORDPATH}/${storedir}"
 				mv ${TMP}/passed-conditional.xml "${path}"
 				if [ ! -z ${UPDATE_CMD} ]; then
 					eval ${UPDATE_CMD}
