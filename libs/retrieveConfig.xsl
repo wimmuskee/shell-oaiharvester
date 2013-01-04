@@ -22,6 +22,12 @@
 			<xsl:when test="$data='wgetopts'">
   				<xsl:value-of select="/cfg:config/cfg:wgetopts"/>
 			</xsl:when>
+			<xsl:when test="$data='updatecmd'">
+  				<xsl:value-of select="/cfg:config/cfg:updatecmd"/>
+			</xsl:when>
+			<xsl:when test="$data='deletecmd'">
+  				<xsl:value-of select="/cfg:config/cfg:deletecmd"/>
+			</xsl:when>
 			<!-- Repository options -->
 			<xsl:when test="$data='baseurl'">
   				<xsl:value-of select="/cfg:config/cfg:repository[@id=$repository]/cfg:baseurl"/>

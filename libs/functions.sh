@@ -23,13 +23,16 @@ function getRecords
 		local name="${identifier}"
 		local namemd5=$(echo "${name}" | md5sum)
 		local storedir=${namemd5:0:2}
+		local path="${REPOSITORY_RECORDPATH}/harvested/${storedir}/${name}"
 		
 		# check if status is deleted
 		local status=$(xsltproc --stringparam data headerstatus --param record_nr ${count} libs/retrieveData.xsl oaipage.xml)
 
 		if [ "${status}" == "deleted" ]; then
-			touch "${REPOSITORY_RECORDPATH}/deleted/${name}"
-			rm -f "${REPOSITORY_RECORDPATH}/harvested/${storedir}/${name}" > /dev/null 2>&1
+			if [ ! -z ${DELETE_CMD} ]; then
+				eval ${DELETE_CMD}
+			fi
+			rm -f "${path}" > /dev/null 2>&1
 		else
 			# Store temporary record
 			xsltproc --param record_nr ${count} libs/retrieveRecord.xsl oaipage.xml > ${TMP}/harvested.xml
@@ -49,7 +52,10 @@ function getRecords
 			# store record if it passed the conditional test
 			if [ -f ${TMP}/passed-conditional.xml ]; then
 				mkdir -p "${REPOSITORY_RECORDPATH}/harvested/${storedir}"
-				mv ${TMP}/passed-conditional.xml "${REPOSITORY_RECORDPATH}/harvested/${storedir}/${name}"
+				mv ${TMP}/passed-conditional.xml "${path}"
+				if [ ! -z ${UPDATE_CMD} ]; then
+					eval ${UPDATE_CMD}
+				fi
 			fi
 
 			# do translate here if translate is true

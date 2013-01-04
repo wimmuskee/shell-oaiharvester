@@ -38,6 +38,8 @@ if [ -f config.xml ]; then
 	TMP=$(xsltproc --stringparam data temppath libs/retrieveConfig.xsl config.xml)
 	LOGFILE=$(xsltproc --stringparam data logfile libs/retrieveConfig.xsl config.xml)
 	WGET_OPTS=$(xsltproc --stringparam data wgetopts libs/retrieveConfig.xsl config.xml)
+	UPDATE_CMD=$(xsltproc --stringparam data updatecmd libs/retrieveConfig.xsl config.xml)
+	DELETE_CMD=$(xsltproc --stringparam data deletecmd libs/retrieveConfig.xsl config.xml)
 	BASEURL=$(xsltproc --stringparam data baseurl --stringparam repository ${REPOSITORY} libs/retrieveConfig.xsl config.xml)
 	PREFIX=$(xsltproc --stringparam data metadataprefix --stringparam repository ${REPOSITORY} libs/retrieveConfig.xsl config.xml)
 	SET=$(xsltproc --stringparam data set --stringparam repository ${REPOSITORY} libs/retrieveConfig.xsl config.xml)
