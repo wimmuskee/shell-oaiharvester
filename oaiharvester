@@ -14,11 +14,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-source libs/functions.sh
-
-VERSION="0.8.2"
+VERSION="0.9"
 VERB="ListRecords"
 CONFIGFILE="/etc/shell-oaiharvester/config.xml"
+INSTALLDIR="/usr/share/shell-oaiharvester"
 
 function usage {
 cat <<EOF
@@ -38,6 +37,13 @@ Options:
   -v, --version                 Displays the shell-oaiharvester version.
 EOF
 }
+
+if [ ! -f "${INSTALLDIR}/functions.sh" ]; then
+	echo "Error: No functions found in: ${INSTALLDIR}/functions.sh"
+	exit 1
+fi
+source "${INSTALLDIR}/functions.sh"
+
 
 # Reading options
 if ! args=$(getopt -n "$0" -o "c:hr:nh" \
@@ -59,7 +65,6 @@ while true ; do
 	shift
 done
 
-echo ${CONFIGFILE}
 # Check repository id
 if [ -z ${REPOSITORY} ]; then
 	die "Error: No repository id provided"
@@ -106,7 +111,7 @@ echo "Creating repository storage in: ${REPOSITORY_RECORDPATH}"
 mkdir -p ${REPOSITORY_RECORDPATH}
 mkdir -p ${TMP}
 touch ${LOGFILE}
-rm -f oaipage.xml identify.xml > /dev/null 2>&1
+rm -f ${TMP}/oaipage.xml ${TMP}/identify.xml > /dev/null 2>&1
 
 
 # Setting other arguments if set in config.
@@ -126,8 +131,8 @@ fi
 repository_timestamp="${REPOSITORY_RECORDPATH}/lasttimestamp.txt"
 if [ -f ${repository_timestamp} ]; then
 	# check out identify for datetime granularity
-	wget ${WGET_OPTS} "${BASEURL}?verb=Identify" -O identify.xml
-	granularity=$(xsltproc --stringparam data granularity libs/retrieveData.xsl identify.xml)
+	wget ${WGET_OPTS} "${BASEURL}?verb=Identify" -O ${TMP}/identify.xml
+	granularity=$(xsltproc --stringparam data granularity ${INSTALLDIR}/retrieveData.xsl ${TMP}/identify.xml)
 
 	if [ "${granularity}" == "YYYY-MM-DDThh:mm:ssZ" ]; then
 		timestamp=$(cat ${repository_timestamp})
@@ -144,16 +149,16 @@ echo "Starting harvest from: ${URL}"
 # Now, get the initial page and the records
 # if there is a resumptionToken, retrieve other pages
 getRecords
-RESUMPTION=$(xsltproc --stringparam data resumptiontoken libs/retrieveData.xsl oaipage.xml)
+RESUMPTION=$(xsltproc --stringparam data resumptiontoken ${INSTALLDIR}/retrieveData.xsl ${TMP}/oaipage.xml)
 
 while [ "${RESUMPTION}" != "" ]; do
 	URL="${BASEURL}?verb=${VERB}&resumptionToken=${RESUMPTION}"
 	getRecords
-	RESUMPTION=$(xsltproc --stringparam data resumptiontoken libs/retrieveData.xsl oaipage.xml)
+	RESUMPTION=$(xsltproc --stringparam data resumptiontoken ${INSTALLDIR}/retrieveData.xsl ${TMP}/oaipage.xml)
 done
 
 # finishing up
 date -u +'%FT%TZ' > ${repository_timestamp}
-rm -f oaipage.xml identify.xml
+rm -f ${TMP}/oaipage.xml ${TMP}/identify.xml
 
 exit 0

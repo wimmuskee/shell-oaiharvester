@@ -8,21 +8,21 @@ function die {
 # Gets generic options from config file.
 function getGenericConfig {
 	local data=$1
-	echo $(xsltproc --stringparam data ${data} libs/retrieveConfig.xsl ${CONFIGFILE})
+	echo $(xsltproc --stringparam data ${data} ${INSTALLDIR}/retrieveConfig.xsl ${CONFIGFILE})
 }
 
 # Gets repository specific options from config file.
 function getRepositoryConfig {
 	local data=$1
 	local repository=$2
-	echo $(xsltproc --stringparam data ${data} --stringparam repository ${repository} libs/retrieveConfig.xsl ${CONFIGFILE})
+	echo $(xsltproc --stringparam data ${data} --stringparam repository ${repository} ${INSTALLDIR}/retrieveConfig.xsl ${CONFIGFILE})
 }
 
 # getRecords function
 function getRecords {
 	# download the oaipage
 	local starttime=$(date +%s%N | cut -b1-13)
-	wget ${WGET_OPTS} ${URL} -O oaipage.xml
+	wget ${WGET_OPTS} ${URL} -O ${TMP}/oaipage.xml
 	local endtime=$(date +%s%N | cut -b1-13)
 	local downloadtime=$(echo "scale=3; ($endtime - $starttime)/1000" | bc)
 
@@ -31,19 +31,19 @@ function getRecords {
 	local starttime=$(date +%s%N | cut -b1-13)
 	local conditional="${REPOSITORY_RECORDPATH}/${CONDITIONAL}"
 	local count=1
-	local record_count=$(xsltproc --stringparam data record_count libs/retrieveData.xsl oaipage.xml)
+	local record_count=$(xsltproc --stringparam data record_count ${INSTALLDIR}/retrieveData.xsl ${TMP}/oaipage.xml)
 
 	
 	while [ ${count} -le ${record_count} ]; do
 		# get oai identifier and actual storage dir (based on first 2 chars of md5sum identifier)
-		local identifier=$(xsltproc --stringparam data identifier --param record_nr ${count} libs/retrieveData.xsl oaipage.xml | sed s/\\//\%2F/g | sed s/\&/\%26/g | sed s/\ /\%20/g)
+		local identifier=$(xsltproc --stringparam data identifier --param record_nr ${count} ${INSTALLDIR}/retrieveData.xsl ${TMP}/oaipage.xml | sed s/\\//\%2F/g | sed s/\&/\%26/g | sed s/\ /\%20/g)
 		local name="${identifier}"
 		local namemd5=$(echo "${name}" | md5sum)
 		local storedir=${namemd5:0:2}
 		local path="${REPOSITORY_RECORDPATH}/${storedir}/${name}"
 		
 		# check if status is deleted
-		local status=$(xsltproc --stringparam data headerstatus --param record_nr ${count} libs/retrieveData.xsl oaipage.xml)
+		local status=$(xsltproc --stringparam data headerstatus --param record_nr ${count} ${INSTALLDIR}/retrieveData.xsl ${TMP}/oaipage.xml)
 
 		if [ "${status}" == "deleted" ]; then
 			if [ ! -z ${DELETE_CMD} ]; then
@@ -52,7 +52,7 @@ function getRecords {
 			rm -f "${path}" > /dev/null 2>&1
 		else
 			# Store temporary record
-			xsltproc --param record_nr ${count} libs/retrieveRecord.xsl oaipage.xml > ${TMP}/harvested.xml
+			xsltproc --param record_nr ${count} ${INSTALLDIR}/retrieveRecord.xsl ${TMP}/oaipage.xml > ${TMP}/harvested.xml
 
 			# first parse conditional xslt if available
 			if [ ! -z ${conditional} ] && [ -f ${conditional} ]; then
