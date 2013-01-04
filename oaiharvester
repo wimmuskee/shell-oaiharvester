@@ -16,20 +16,41 @@
 
 source libs/functions.sh
 
-# Reading repository id
-if [ ! -z $1 ]; then
-	REPOSITORY=$1
-else
-	echo "No repository id provided"
-	exit 1
-fi
-
-# optionally override verb
+VERSION="0.8"
 VERB="ListRecords"
-if [ ! -z $2 ]; then
-	if [ "$2" == "ListIdentifiers" ]; then
-		VERB=$2
-	fi
+
+function usage {
+cat <<EOF
+Usage: $0 [OPTION]
+
+Harvest an OAI-PMH target that is configured. Use the config.xml file to configure each
+repository you want to harvest.
+
+Options:
+  -h, --help                    Displays the shell-oaiharvester help message.
+  -n, --no-records              When this is set, no record content is saved, only an
+                                empty file.
+  -r, --repository[=id]         Sets the repository identifier to harvest. This corresponds
+                                with the identifier in the config file.
+  -v, --version                 Displays the shell-oaiharvester version.
+EOF
+}
+
+# Reading options
+for opt in $@ ; do
+	case $opt in
+		--version|-v) echo "${VERSION}"; exit 0 ;;
+		--help|-h) usage; exit 0 ;;
+		--repository|-r) shift; REPOSITORY=$1 ;;
+		--no-records|-n) VERB="ListIdentifiers" ;;
+	esac
+	shift
+done
+
+# Check repository id
+if [ -z $REPOSITORY ]; then
+	echo "Error: No repository id provided"
+	exit 1
 fi
 
 # Reading oai repository info
