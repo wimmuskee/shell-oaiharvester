@@ -1,4 +1,4 @@
-#!/bin/bash
+# Functions for the shell-oaiharvester.
 
 # getRecords function
 function getRecords
@@ -18,16 +18,18 @@ function getRecords
 
 	
 	while [ ${count} -le ${record_count} ]; do
-		# get oai identifier
-		identifier=$(xsltproc --stringparam data identifier --param record_nr ${count} libs/retrieveData.xsl oaipage.xml | sed s/\\//\%2F/g | sed s/\&/\%26/g | sed s/\ /\%20/g)
-		name="${identifier}"
-
+		# get oai identifier and actual storage dir (based on first 2 chars of md5sum identifier)
+		local identifier=$(xsltproc --stringparam data identifier --param record_nr ${count} libs/retrieveData.xsl oaipage.xml | sed s/\\//\%2F/g | sed s/\&/\%26/g | sed s/\ /\%20/g)
+		local name="${identifier}"
+		local namemd5=$(echo "${name}" | md5sum)
+		local storedir=${namemd5:0:2}
+		
 		# check if status is deleted
-		status=$(xsltproc --stringparam data headerstatus --param record_nr ${count} libs/retrieveData.xsl oaipage.xml)
+		local status=$(xsltproc --stringparam data headerstatus --param record_nr ${count} libs/retrieveData.xsl oaipage.xml)
 
 		if [ "${status}" == "deleted" ]; then
 			touch "${REPOSITORY_RECORDPATH}/deleted/${name}"
-			rm -f "${REPOSITORY_RECORDPATH}/harvested/${name}" > /dev/null 2>&1
+			rm -f "${REPOSITORY_RECORDPATH}/harvested/${storedir}/${name}" > /dev/null 2>&1
 		else
 			# Store temporary record
 			xsltproc --param record_nr ${count} libs/retrieveRecord.xsl oaipage.xml > ${TMP}/harvested.xml
@@ -36,7 +38,7 @@ function getRecords
 			if [ ! -z ${conditional} ] && [ -f ${conditional} ]; then
 				if [ "$(xsltproc ${conditional} ${TMP}/harvested.xml)" == "" ]; then
 					# conditional not met, delete record
-					rm  ${TMP}/harvested.xml
+					rm ${TMP}/harvested.xml
 				else
 					mv ${TMP}/harvested.xml ${TMP}/passed-conditional.xml
 				fi
@@ -46,7 +48,8 @@ function getRecords
 
 			# store record if it passed the conditional test
 			if [ -f ${TMP}/passed-conditional.xml ]; then
-				mv ${TMP}/passed-conditional.xml "${REPOSITORY_RECORDPATH}/harvested/${name}"
+				mkdir -p "${REPOSITORY_RECORDPATH}/harvested/${storedir}"
+				mv ${TMP}/passed-conditional.xml "${REPOSITORY_RECORDPATH}/harvested/${storedir}/${name}"
 			fi
 
 			# do translate here if translate is true
@@ -54,8 +57,6 @@ function getRecords
 			#xsltproc --param record_nr ${count} retrieveRecord.xsl oaipage.xml > /tmp/record.xml
 			#xsltproc modules/lom/stripUrls.xsl /tmp/record.xml > "${STORE_DIR}/${name}"
 			#rm /tmp/record.xml
-
-			# sla gewoon raw op
 		fi
 
 		count=$(( ${count} + 1 ))
@@ -68,4 +69,3 @@ function getRecords
 	# write logline
 	echo "$(date '+%F %T'),$REPOSITORY,$record_count,$downloadtime,$processtime" >> ${LOGFILE}
 }
-
