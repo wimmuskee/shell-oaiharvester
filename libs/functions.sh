@@ -1,8 +1,25 @@
 # Functions for the shell-oaiharvester.
 
+function die {
+	echo "$@" >&2
+	exit 1
+}
+
+# Gets generic options from config file.
+function getGenericConfig {
+	local data=$1
+	echo $(xsltproc --stringparam data ${data} libs/retrieveConfig.xsl ${CONFIGFILE})
+}
+
+# Gets repository specific options from config file.
+function getRepositoryConfig {
+	local data=$1
+	local repository=$2
+	echo $(xsltproc --stringparam data ${data} --stringparam repository ${repository} libs/retrieveConfig.xsl ${CONFIGFILE})
+}
+
 # getRecords function
-function getRecords
-{
+function getRecords {
 	# download the oaipage
 	local starttime=$(date +%s%N | cut -b1-13)
 	wget ${WGET_OPTS} ${URL} -O oaipage.xml

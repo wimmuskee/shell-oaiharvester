@@ -16,17 +16,20 @@
 
 source libs/functions.sh
 
-VERSION="0.8.1"
+VERSION="0.8.2"
 VERB="ListRecords"
+CONFIGFILE="/etc/shell-oaiharvester/config.xml"
 
 function usage {
 cat <<EOF
 Usage: $0 [OPTION]
 
-Harvest an OAI-PMH target that is configured. Use the config.xml file to configure each
+Harvest an OAI-PMH target that is configured. Use the configuration file to configure each
 repository you want to harvest.
 
 Options:
+  -c, --config[=path]           Set a custom configuration file to use. By default, then
+                                one in /etc/shell-oaiharvester/config.xml is used.
   -h, --help                    Displays the shell-oaiharvester help message.
   -n, --no-records              When this is set, no record content is saved, only an
                                 empty file.
@@ -37,51 +40,58 @@ EOF
 }
 
 # Reading options
-for opt in $@ ; do
-	case $opt in
-		--version|-v) echo "${VERSION}"; exit 0 ;;
+if ! args=$(getopt -n "$0" -o "c:hr:nh" \
+	-l "config:,help,repository:,no-records,version" -- "$@")
+then
+	exit 1
+fi
+eval "set -- $args"
+while true ; do
+	case "$1" in
+		--config|-c) shift; CONFIGFILE=$1 ;;
 		--help|-h) usage; exit 0 ;;
 		--repository|-r) shift; REPOSITORY=$1 ;;
 		--no-records|-n) VERB="ListIdentifiers" ;;
+		--version|-v) echo "${VERSION}"; exit 0 ;;
+		--) shift ; break ;;
+		*) die "$0: Internal error!" ;;
 	esac
 	shift
 done
 
+echo ${CONFIGFILE}
 # Check repository id
-if [ -z $REPOSITORY ]; then
-	echo "Error: No repository id provided"
-	exit 1
+if [ -z ${REPOSITORY} ]; then
+	die "Error: No repository id provided"
+fi
+
+# Check config file
+if [ -z ${CONFIGFILE} ] || [ ! -f ${CONFIGFILE} ]; then
+	die "Error: Config file not found: ${CONFIGFILE}"
 fi
 
 # Reading oai repository info
-if [ -f config.xml ]; then
-	RECORDPATH=$(xsltproc --stringparam data recordpath libs/retrieveConfig.xsl config.xml)
-	TMP=$(xsltproc --stringparam data temppath libs/retrieveConfig.xsl config.xml)
-	LOGFILE=$(xsltproc --stringparam data logfile libs/retrieveConfig.xsl config.xml)
-	WGET_OPTS=$(xsltproc --stringparam data wgetopts libs/retrieveConfig.xsl config.xml)
-	UPDATE_CMD=$(xsltproc --stringparam data updatecmd libs/retrieveConfig.xsl config.xml)
-	DELETE_CMD=$(xsltproc --stringparam data deletecmd libs/retrieveConfig.xsl config.xml)
-	BASEURL=$(xsltproc --stringparam data baseurl --stringparam repository ${REPOSITORY} libs/retrieveConfig.xsl config.xml)
-	PREFIX=$(xsltproc --stringparam data metadataprefix --stringparam repository ${REPOSITORY} libs/retrieveConfig.xsl config.xml)
-	SET=$(xsltproc --stringparam data set --stringparam repository ${REPOSITORY} libs/retrieveConfig.xsl config.xml)
-	FROM=$(xsltproc --stringparam data from --stringparam repository ${REPOSITORY} libs/retrieveConfig.xsl config.xml)
-	UNTIL=$(xsltproc --stringparam data until --stringparam repository ${REPOSITORY} libs/retrieveConfig.xsl config.xml)
-	CONDITIONAL=$(xsltproc --stringparam data conditional --stringparam repository ${REPOSITORY} libs/retrieveConfig.xsl config.xml)
-	REPOSITORY_RECORDPATH=$(xsltproc --stringparam data repository_path --stringparam repository ${REPOSITORY} libs/retrieveConfig.xsl config.xml)
-else
-	echo "Error: No repository config found."
-	exit 1
-fi
+RECORDPATH=$(getGenericConfig "recordpath")
+TMP=$(getGenericConfig "temppath")
+LOGFILE=$(getGenericConfig "logfile")
+WGET_OPTS=$(getGenericConfig "wgetopts")
+UPDATE_CMD=$(getGenericConfig "updatecmd")
+DELETE_CMD=$(getGenericConfig "deletecmd")
+BASEURL=$(getRepositoryConfig "baseurl" ${REPOSITORY})
+PREFIX=$(getRepositoryConfig "metadataprefix" ${REPOSITORY})
+SET=$(getRepositoryConfig "set" ${REPOSITORY})
+FROM=$(getRepositoryConfig "from" ${REPOSITORY})
+UNTIL=$(getRepositoryConfig "until" ${REPOSITORY})
+CONDITIONAL=$(getRepositoryConfig "conditional" ${REPOSITORY})
+REPOSITORY_RECORDPATH=$(getRepositoryConfig "repository_path" ${REPOSITORY})
 
 # checking required values
 if [ -z ${BASEURL} ]; then
-	echo "Error: No baseurl found for repository: ${REPOSITORY}"
-	exit 1
+	die "Error: No baseurl found for repository: ${REPOSITORY}"
 fi
 
 if [ -z ${PREFIX} ]; then
-        echo "Error: No prefix found for repository: ${REPOSITORY}"
-        exit 1
+	die "Error: No prefix found for repository: ${REPOSITORY}"
 fi
 
 # Set some sane defaults
