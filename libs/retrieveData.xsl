@@ -10,7 +10,7 @@
 		<xsl:choose>
 			<xsl:when test="$data='identifier'">
 				<xsl:if test="/oai:OAI-PMH/oai:ListRecords">
-					<xsl:value-of select="/oai:OAI-PMH/oai:ListRecords/oai:records[$record_nr]/oai:header/oai:identifier"/>
+					<xsl:value-of select="/oai:OAI-PMH/oai:ListRecords/oai:record[$record_nr]/oai:header/oai:identifier"/>
 				</xsl:if>
 				<xsl:if test="/oai:OAI-PMH/oai:ListIdentifiers">
 					<xsl:value-of select="/oai:OAI-PMH/oai:ListIdentifiers/oai:header[$record_nr]/oai:identifier"/>
@@ -28,7 +28,7 @@
 			</xsl:when>
 			<xsl:when test="$data='headerstatus'">
 				<xsl:if test="/oai:OAI-PMH/oai:ListRecords">
-					<xsl:value-of select="/oai:OAI-PMH/oai:ListRecords/oai:records[$record_nr]/oai:header/@status"/>
+					<xsl:value-of select="/oai:OAI-PMH/oai:ListRecords/oai:record[$record_nr]/oai:header/@status"/>
 				</xsl:if>
 				<xsl:if test="/oai:OAI-PMH/oai:ListIdentifiers">
 					<xsl:value-of select="/oai:OAI-PMH/oai:ListIdentifiers/oai:header[$record_nr]/@status"/>
