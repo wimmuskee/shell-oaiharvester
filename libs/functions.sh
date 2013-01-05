@@ -18,6 +18,13 @@ function getRepositoryConfig {
 	echo $(xsltproc --stringparam data ${data} --stringparam repository ${repository} ${INSTALLDIR}/retrieveConfig.xsl ${CONFIGFILE})
 }
 
+# Gets data from target.
+function getTargetData {
+	local data=$1
+	local target=$2
+	echo $(xsltproc --stringparam data ${data} ${INSTALLDIR}/retrieveData.xsl ${TMP}/${target}.xml)
+}
+
 # getRecords function
 function getRecords {
 	# download the oaipage
@@ -31,7 +38,7 @@ function getRecords {
 	local starttime=$(date +%s%N | cut -b1-13)
 	local conditional="${REPOSITORY_RECORDPATH}/${CONDITIONAL}"
 	local count=1
-	local record_count=$(xsltproc --stringparam data record_count ${INSTALLDIR}/retrieveData.xsl ${TMP}/oaipage.xml)
+	local record_count=$(getTargetData "record_count" "oaipage")
 
 	
 	while [ ${count} -le ${record_count} ]; do

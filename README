@@ -3,10 +3,11 @@ The OAI-PMH Shell Harvester is able to harvest OAI-PMH targets. It supports mult
 Installing shell-harvester:
  - dependencies: xsltproc, bc
  - git clone git://github.com/wimmuskee/shell-oaiharvester.git
- - cp oaiharvester /usr/bin/oaiharvester
- - mkdir /usr/share/shell-oaiharvester
- - cp libs/* /usr/share/shell-oaiharvester/.
- - cp config.xml /etc/shell-oaiharvester/config.xml
+ - use Makefile or:
+  - cp oaiharvester /usr/bin/oaiharvester
+  - mkdir /usr/share/shell-oaiharvester
+  - cp libs/* /usr/share/shell-oaiharvester/.
+  - cp config.xml /etc/shell-oaiharvester/config.xml
 
 Using shell-harvester:
 
@@ -29,7 +30,7 @@ Using shell-harvester:
 3. Run the harvester
    $ oaiharvester -r <repository_id>
 
-4. Only retrieve identifiers (doesn't work)
+4. Only retrieve identifiers
    $ oaiharvester -r <repository_id> -n
 
 *. Unless customized, the log file of the harvest process is stored at

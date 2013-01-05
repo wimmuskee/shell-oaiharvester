@@ -6,7 +6,6 @@
 	<xsl:output method="xml"/>
 	<xsl:param name="record_nr"/>
 	<xsl:template match="/">
-  		<xsl:copy-of select="//oai:record[$record_nr]/oai:metadata/child::*"/>
+		<xsl:copy-of select="/oai:OAI-PMH/oai:ListRecords/oai:record[$record_nr]/oai:metadata/child::*"/>
 	</xsl:template>
 </xsl:stylesheet>
-

@@ -9,21 +9,31 @@
 	<xsl:template match="/">
 		<xsl:choose>
 			<xsl:when test="$data='identifier'">
-  				<xsl:value-of select="//oai:record[$record_nr]/oai:header/oai:identifier"/>
+				<xsl:if test="/oai:OAI-PMH/oai:ListRecords">
+					<xsl:value-of select="/oai:OAI-PMH/oai:ListRecords/oai:records[$record_nr]/oai:header/oai:identifier"/>
+				</xsl:if>
+				<xsl:if test="/oai:OAI-PMH/oai:ListIdentifiers">
+					<xsl:value-of select="/oai:OAI-PMH/oai:ListIdentifiers/oai:header[$record_nr]/oai:identifier"/>
+				</xsl:if>
 			</xsl:when>
+			<!-- count headers, independent of ListRecords or ListIdentifiers -->
 			<xsl:when test="$data='record_count'">
-  				<xsl:value-of select="count(//oai:record)"/>
+				<xsl:value-of select="count(//oai:header)"/>
 			</xsl:when>
 			<xsl:when test="$data='resumptiontoken'">
-  				<xsl:value-of select="//oai:resumptionToken"/>
+				<xsl:value-of select="//oai:resumptionToken"/>
 			</xsl:when>
 			<xsl:when test="$data='granularity'">
-  				<xsl:value-of select="//oai:granularity"/>
+				<xsl:value-of select="/oai:OAI-PMH/oai:Identify/oai:granularity"/>
 			</xsl:when>
 			<xsl:when test="$data='headerstatus'">
-  				<xsl:value-of select="//oai:record[$record_nr]/oai:header/@status"/>
+				<xsl:if test="/oai:OAI-PMH/oai:ListRecords">
+					<xsl:value-of select="/oai:OAI-PMH/oai:ListRecords/oai:records[$record_nr]/oai:header/@status"/>
+				</xsl:if>
+				<xsl:if test="/oai:OAI-PMH/oai:ListIdentifiers">
+					<xsl:value-of select="/oai:OAI-PMH/oai:ListIdentifiers/oai:header[$record_nr]/@status"/>
+				</xsl:if>
 			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
 </xsl:stylesheet>
-

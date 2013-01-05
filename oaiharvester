@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-VERSION="0.9"
+VERSION="0.9.1"
 VERB="ListRecords"
 CONFIGFILE="/etc/shell-oaiharvester/config.xml"
 INSTALLDIR="/usr/share/shell-oaiharvester"
@@ -46,7 +46,7 @@ source "${INSTALLDIR}/functions.sh"
 
 
 # Reading options
-if ! args=$(getopt -n "$0" -o "c:hr:nh" \
+if ! args=$(getopt -n "$0" -o "c:hr:nv" \
 	-l "config:,help,repository:,no-records,version" -- "$@")
 then
 	exit 1
@@ -132,7 +132,7 @@ repository_timestamp="${REPOSITORY_RECORDPATH}/lasttimestamp.txt"
 if [ -f ${repository_timestamp} ]; then
 	# check out identify for datetime granularity
 	wget ${WGET_OPTS} "${BASEURL}?verb=Identify" -O ${TMP}/identify.xml
-	granularity=$(xsltproc --stringparam data granularity ${INSTALLDIR}/retrieveData.xsl ${TMP}/identify.xml)
+	granularity=$(getTargetData "granularity" "identify")
 
 	if [ "${granularity}" == "YYYY-MM-DDThh:mm:ssZ" ]; then
 		timestamp=$(cat ${repository_timestamp})
@@ -149,12 +149,12 @@ echo "Starting harvest from: ${URL}"
 # Now, get the initial page and the records
 # if there is a resumptionToken, retrieve other pages
 getRecords
-RESUMPTION=$(xsltproc --stringparam data resumptiontoken ${INSTALLDIR}/retrieveData.xsl ${TMP}/oaipage.xml)
+RESUMPTION=$(getTargetData "resumptiontoken" "oaipage")
 
 while [ "${RESUMPTION}" != "" ]; do
 	URL="${BASEURL}?verb=${VERB}&resumptionToken=${RESUMPTION}"
 	getRecords
-	RESUMPTION=$(xsltproc --stringparam data resumptiontoken ${INSTALLDIR}/retrieveData.xsl ${TMP}/oaipage.xml)
+	RESUMPTION=$(getTargetData "resumptiontoken" "oaipage")
 done
 
 # finishing up
