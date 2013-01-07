@@ -33,7 +33,6 @@ function getRecords {
 	local endtime=$(date +%s%N | cut -b1-13)
 	local downloadtime=$(echo "scale=3; ($endtime - $starttime)/1000" | bc)
 
-
 	# process the downloaded xml
 	local starttime=$(date +%s%N | cut -b1-13)
 	local conditional="${REPOSITORY_RECORDPATH}/${CONDITIONAL}"
@@ -44,10 +43,11 @@ function getRecords {
 	while [ ${count} -le ${record_count} ]; do
 		# get oai identifier and actual storage dir (based on first 2 chars of md5sum identifier)
 		local identifier=$(xsltproc --stringparam data identifier --param record_nr ${count} ${INSTALLDIR}/retrieveData.xsl ${TMP}/oaipage.xml | sed s/\\//\%2F/g | sed s/\&/\%26/g | sed s/\ /\%20/g)
-		local name="${identifier}"
-		local namemd5=$(echo "${name}" | md5sum)
+		local filename="${identifier}"
+		[ "${COMPRESS}" == "true" ] && filename="${filename}.xz"
+		local namemd5=$(echo "${identifier}" | md5sum)
 		local storedir=${namemd5:0:2}
-		local path="${REPOSITORY_RECORDPATH}/${storedir}/${name}"
+		local path="${REPOSITORY_RECORDPATH}/${storedir}/${filename}"
 		
 		# check if status is deleted
 		local status=$(xsltproc --stringparam data headerstatus --param record_nr ${count} ${INSTALLDIR}/retrieveData.xsl ${TMP}/oaipage.xml)
@@ -76,7 +76,14 @@ function getRecords {
 			# store record if it passed the conditional test
 			if [ -f ${TMP}/passed-conditional.xml ]; then
 				mkdir -p "${REPOSITORY_RECORDPATH}/${storedir}"
-				mv ${TMP}/passed-conditional.xml "${path}"
+
+				if [ "${COMPRESS}" == "false" ]; then
+					mv ${TMP}/passed-conditional.xml "${path}"
+				elif [ "${COMPRESS}" == "true" ]; then
+					 xz -c ${TMP}/passed-conditional.xml > "${path}"
+					 rm ${TMP}/passed-conditional.xml
+				fi
+
 				if [ ! -z ${UPDATE_CMD} ]; then
 					eval ${UPDATE_CMD}
 				fi

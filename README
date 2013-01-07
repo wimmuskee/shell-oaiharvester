@@ -23,7 +23,8 @@ Using shell-harvester:
    Some notes on the options:
     - deletecmd: executed before a record is deleted, optional
     - updatecmd: executed after a record is updated, optional
-      - ${name} holds the identifier
+      - ${identifier} holds the identifier
+      - ${filename) is the identifier with optional xz extension
       - ${path} holds the absolute path of the record
     - set, from, until, conditional and recordpath are optional
 

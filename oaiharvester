@@ -14,10 +14,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-VERSION="0.9.1"
+VERSION="0.9.2"
 VERB="ListRecords"
 CONFIGFILE="/etc/shell-oaiharvester/config.xml"
 INSTALLDIR="/usr/share/shell-oaiharvester"
+COMPRESS="false"
 
 function usage {
 cat <<EOF
@@ -35,6 +36,7 @@ Options:
   -r, --repository[=id]         Sets the repository identifier to harvest. This corresponds
                                 with the identifier in the config file.
   -v, --version                 Displays the shell-oaiharvester version.
+  -z, --compress                Compress stored records with xz.
 EOF
 }
 
@@ -46,8 +48,8 @@ source "${INSTALLDIR}/functions.sh"
 
 
 # Reading options
-if ! args=$(getopt -n "$0" -o "c:hr:nv" \
-	-l "config:,help,repository:,no-records,version" -- "$@")
+if ! args=$(getopt -n "$0" -o "c:hr:nvz" \
+	-l "compress,config:,help,repository:,no-records,version" -- "$@")
 then
 	exit 1
 fi
@@ -59,6 +61,7 @@ while true ; do
 		--repository|-r) shift; REPOSITORY=$1 ;;
 		--no-records|-n) VERB="ListIdentifiers" ;;
 		--version|-v) echo "${VERSION}"; exit 0 ;;
+		--compress|-z) COMPRESS="true"
 		--) shift ; break ;;
 		*) die "$0: Internal error!" ;;
 	esac
