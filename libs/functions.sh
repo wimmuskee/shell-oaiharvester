@@ -39,7 +39,6 @@ function getRecords {
 	local count=1
 	local record_count=$(getTargetData "record_count" "oaipage")
 
-	
 	while [ ${count} -le ${record_count} ]; do
 		# get oai identifier and actual storage dir (based on first 2 chars of md5sum identifier)
 		local identifier=$(xsltproc --stringparam data identifier --param record_nr ${count} ${INSTALLDIR}/retrieveData.xsl ${TMP}/oaipage.xml | sed s/\\//\%2F/g | sed s/\&/\%26/g | sed s/\ /\%20/g)
@@ -101,7 +100,6 @@ function getRecords {
 	
 	local endtime=$(date +%s%N | cut -b1-13)
 	local processtime=$(echo "scale=3; ($endtime - $starttime)/1000" | bc)
-
 
 	# write logline
 	echo "$(date '+%F %T'),$REPOSITORY,$record_count,$downloadtime,$processtime" >> ${LOGFILE}

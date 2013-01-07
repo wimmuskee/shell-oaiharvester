@@ -61,7 +61,7 @@ while true ; do
 		--repository|-r) shift; REPOSITORY=$1 ;;
 		--no-records|-n) VERB="ListIdentifiers" ;;
 		--version|-v) echo "${VERSION}"; exit 0 ;;
-		--compress|-z) COMPRESS="true"
+		--compress|-z) COMPRESS="true" ;;
 		--) shift ; break ;;
 		*) die "$0: Internal error!" ;;
 	esac
@@ -108,6 +108,9 @@ TMP=${TMP:-/tmp}
 LOGFILE=${LOG:-/tmp/oaiharvester-log.csv}
 REPOSITORY_RECORDPATH=${REPOSITORY_RECORDPATH:-${RECORDPATH}/${REPOSITORY}}
 
+if [ ! -w ${LOGFILE} ]; then
+	die "Error: Logfile not writable: ${LOGFILE}"
+fi
 
 # Making sure the repository storage and tmp dirs exists
 echo "Creating repository storage in: ${REPOSITORY_RECORDPATH}"
