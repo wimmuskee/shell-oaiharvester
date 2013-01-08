@@ -25,6 +25,19 @@ function getTargetData {
 	echo $(xsltproc --stringparam data ${data} ${INSTALLDIR}/retrieveData.xsl ${TMP}/${target}.xml)
 }
 
+# Check if the HTTP status code returns 200
+function checkHttpStatus {
+	local name=$1
+	local call=$2
+	local statuscode=$(wget ${WGET_OPTS} --server-response --quiet "${BASEURL}?verb=${call}" -O ${TMP}/${name} 2>&1| grep "  HTTP/" | sed s/^\ \ // | cut -d " " -f 2)
+
+	if [ "${statuscode}" == "200" ]; then
+		echo "${name}: OK"
+	else
+		echo "${name}: FAIL: ${statuscode}"
+	fi
+}
+
 # getRecords function
 function getRecords {
 	# download the oaipage
@@ -103,4 +116,19 @@ function getRecords {
 
 	# write logline
 	echo "$(date '+%F %T'),$REPOSITORY,$record_count,$downloadtime,$processtime" >> ${LOGFILE}
+}
+
+function testRepository {
+	echo "# Checking if pages exist:"
+	checkHttpStatus "identify" "Identify"
+	checkHttpStatus "listmetadataformats" "ListMetadataFormats"
+	
+	if [ -z ${SET} ]; then
+		checkHttpStatus "listrecords" "ListRecords&metadataPrefix=${PREFIX}"
+		checkHttpStatus "listidentifiers" "ListIdentifiers&metadataPrefix=${PREFIX}"
+	else
+		checkHttpStatus "listsets" "ListSets"
+		checkHttpStatus "listrecords" "ListRecords&metadataPrefix=${PREFIX}&set=${SET}"
+		checkHttpStatus "listidentifiers" "ListIdentifiers&metadataPrefix=${PREFIX}&set=${SET}"
+	fi
 }

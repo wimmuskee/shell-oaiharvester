@@ -34,6 +34,9 @@ Using shell-harvester:
 4. Only retrieve identifiers
    $ oaiharvester -r <repository_id> -n
 
+5. Not harvest, but validate the repository
+   $ oaiharvester -r <repository_id> -t
+
 *. Unless customized, the log file of the harvest process is stored at
    /tmp/shell-harvester/log.csv. The logger uses a simple csv format with
    a line for each downloaded page.

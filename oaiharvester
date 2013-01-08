@@ -19,6 +19,7 @@ VERB="ListRecords"
 CONFIGFILE="/etc/shell-oaiharvester/config.xml"
 INSTALLDIR="/usr/share/shell-oaiharvester"
 COMPRESS="false"
+TEST="false"
 
 function usage {
 cat <<EOF
@@ -35,6 +36,7 @@ Options:
                                 empty file.
   -r, --repository[=id]         Sets the repository identifier to harvest. This corresponds
                                 with the identifier in the config file.
+  -t, --test                    Do not harvest, but test if the repository validates.
   -v, --version                 Displays the shell-oaiharvester version.
   -z, --compress                Compress stored records with xz.
 EOF
@@ -48,8 +50,8 @@ source "${INSTALLDIR}/functions.sh"
 
 
 # Reading options
-if ! args=$(getopt -n "$0" -o "c:hr:nvz" \
-	-l "compress,config:,help,repository:,no-records,version" -- "$@")
+if ! args=$(getopt -n "$0" -o "c:hnr:tvz" \
+	-l "compress,config:,help,no-records,repository:,test,version" -- "$@")
 then
 	exit 1
 fi
@@ -60,6 +62,7 @@ while true ; do
 		--help|-h) usage; exit 0 ;;
 		--repository|-r) shift; REPOSITORY=$1 ;;
 		--no-records|-n) VERB="ListIdentifiers" ;;
+		--test|-t) TEST="true" ;;
 		--version|-v) echo "${VERSION}"; exit 0 ;;
 		--compress|-z) COMPRESS="true" ;;
 		--) shift ; break ;;
@@ -110,6 +113,12 @@ REPOSITORY_RECORDPATH=${REPOSITORY_RECORDPATH:-${RECORDPATH}/${REPOSITORY}}
 
 if [ ! -w ${LOGFILE} ]; then
 	die "Error: Logfile not writable: ${LOGFILE}"
+fi
+
+# Find out if we want to validate only
+if [ "${TEST}" == "true" ]; then
+	testRepository
+	exit 0
 fi
 
 # Making sure the repository storage and tmp dirs exists
