@@ -29,7 +29,7 @@ function getTargetData {
 function checkHttpStatus {
 	local name=$1
 	local call=$2
-	local statuscode=$(wget ${WGET_OPTS} --server-response --quiet "${BASEURL}?verb=${call}" -O ${TMP}/${name} 2>&1| grep "  HTTP/" | sed s/^\ \ // | cut -d " " -f 2)
+	local statuscode=$(wget ${WGET_OPTS} --server-response --quiet "${BASEURL}?verb=${call}" -O ${TMP}/${name}.xml 2>&1| grep "  HTTP/" | sed s/^\ \ // | cut -d " " -f 2)
 
 	if [ "${statuscode}" == "200" ]; then
 		echo "${name}: OK"
@@ -131,4 +131,24 @@ function testRepository {
 		checkHttpStatus "listrecords" "ListRecords&metadataPrefix=${PREFIX}&set=${SET}"
 		checkHttpStatus "listidentifiers" "ListIdentifiers&metadataPrefix=${PREFIX}&set=${SET}"
 	fi
+
+	echo
+	echo "# Validating the XML:"
+	echo "# fails without report are ignored strict wildcard errors"
+	if [ ! -f ${TMP}/OAI-PMH.xsd ]; then
+		wget ${WGET_OPTS} --quiet "http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd" -O ${TMP}/OAI-PMH.xsd
+	fi
+
+	# solve strict error message with:
+	# http://blog.gmane.org/gmane.comp.gnome.lib.xml.general/month=20091101/page=2
+	for xml in identify listmetadataformats listsets listrecords listidentifiers; do
+		if [ -s ${TMP}/${xml}.xml ]; then
+			xmllint --noout --schema ${TMP}/OAI-PMH.xsd ${TMP}/${xml}.xml 2>&1| grep -v strict
+		fi
+	done
+
+	# cleaning
+	for xml in identify listmetadataformats listsets listrecords listidentifiers; do
+		rm -f ${TMP}/${xml}.xml
+	done
 }
