@@ -97,13 +97,8 @@ CONDITIONAL=$(getRepositoryConfig "conditional" ${REPOSITORY})
 REPOSITORY_RECORDPATH=$(getRepositoryConfig "repository_path" ${REPOSITORY})
 
 # checking required values
-if [ -z ${BASEURL} ]; then
-	die "Error: No baseurl found for repository: ${REPOSITORY}"
-fi
-
-if [ -z ${PREFIX} ]; then
-	die "Error: No prefix found for repository: ${REPOSITORY}"
-fi
+[ -z ${BASEURL} ] && die "Error: No baseurl found for repository: ${REPOSITORY}"
+[ -z ${PREFIX} ] && die "Error: No prefix found for repository: ${REPOSITORY}"
 
 # Set some sane defaults
 RECORDPATH=${RECORDPATH:-/tmp}
@@ -111,9 +106,7 @@ TMP=${TMP:-/tmp}
 LOGFILE=${LOG:-/tmp/oaiharvester-log.csv}
 REPOSITORY_RECORDPATH=${REPOSITORY_RECORDPATH:-${RECORDPATH}/${REPOSITORY}}
 
-if [ ! -w ${LOGFILE} ]; then
-	die "Error: Logfile not writable: ${LOGFILE}"
-fi
+[ ! -w ${LOGFILE} ] && die "Error: Logfile not writable: ${LOGFILE}"
 
 # Find out if we want to validate only
 if [ "${TEST}" == "true" ]; then
@@ -130,15 +123,9 @@ rm -f ${TMP}/oaipage.xml ${TMP}/identify.xml > /dev/null 2>&1
 
 
 # Setting other arguments if set in config.
-if [ "${SET}" != "" ]; then
-   URI_SET="&set=${SET}"
-fi
-if [ "${FROM}" != "" ]; then
-   URI_FROM="&from=${FROM}"
-fi
-if [ "${UNTIL}" != "" ]; then
-   URI_UNTIL="&until=$UNTIL"
-fi
+[ ! -z ${SET} ] && URI_SET="&set=${SET}"
+[ ! -z ${FROM} ] && URI_FROM="&from=${FROM}"
+[ ! -z ${UNTIL} ] && URI_UNTIL="&until=$UNTIL"
 
 # Checks for a last harvest timestamp, and uses it
 # according to the granularity settings
@@ -163,6 +150,8 @@ echo "Starting harvest from: ${URL}"
 
 # Now, get the initial page and the records
 # if there is a resumptionToken, retrieve other pages
+# Set current timestamp for next harvest
+date -u +'%FT%TZ' > ${repository_timestamp}
 getRecords
 RESUMPTION=$(getTargetData "resumptiontoken" "oaipage")
 
@@ -172,8 +161,7 @@ while [ "${RESUMPTION}" != "" ]; do
 	RESUMPTION=$(getTargetData "resumptiontoken" "oaipage")
 done
 
-# finishing up
-date -u +'%FT%TZ' > ${repository_timestamp}
+# cleaning
 rm -f ${TMP}/oaipage.xml ${TMP}/identify.xml
 
 exit 0
