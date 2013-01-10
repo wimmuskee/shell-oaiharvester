@@ -7,11 +7,11 @@
 	<!-- location of log file -->
 	<logfile>/tmp/shell-harvester/log.csv</logfile>
 	<!-- options for the wget command -->
-	<wgetopts>--quiet --limit-rate=200k</wgetopts>
+	<wgetopts>--quiet --limit-rate=200k --header="Accept-Encoding: gzip,deflate"</wgetopts>
 	<!-- command to execute before delete -->
-	<deletecmd>updateMyDatabase.sh ${path}</deletecmd>
+	<!-- <deletecmd>updateMyDatabase.sh ${path}</deletecmd> -->
 	<!-- command to execute after update -->
-	<updatecmd>echo ${identifier} >> /tmp/harvested.txt</updatecmd>
+	<!-- <updatecmd>echo ${identifier} >> /tmp/harvested.txt</updatecmd> -->
 
 	<repository id="repository_id">
 		<baseurl>http://example.org/oaiprovider</baseurl>
