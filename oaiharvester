@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-VERSION="0.9.2"
+VERSION="0.9.8"
 VERB="ListRecords"
 CONFIGFILE="/etc/shell-oaiharvester/config.xml"
 INSTALLDIR="/usr/share/shell-oaiharvester"
@@ -86,6 +86,7 @@ RECORDPATH=$(getGenericConfig "recordpath")
 TMP=$(getGenericConfig "temppath")
 LOGFILE=$(getGenericConfig "logfile")
 WGET_OPTS=$(getGenericConfig "wgetopts")
+CURL_OPTS=$(getGenericConfig "curlopts")
 UPDATE_CMD=$(getGenericConfig "updatecmd")
 DELETE_CMD=$(getGenericConfig "deletecmd")
 BASEURL=$(getRepositoryConfig "baseurl" ${REPOSITORY})
@@ -133,7 +134,7 @@ rm -f ${TMP}/oaipage.xml ${TMP}/identify.xml > /dev/null 2>&1
 repository_timestamp="${REPOSITORY_RECORDPATH}/lasttimestamp.txt"
 if [ -f ${repository_timestamp} ]; then
 	# check out identify for datetime granularity
-	wget ${WGET_OPTS} "${BASEURL}?verb=Identify" -O ${TMP}/identify.xml
+	curl ${CURL_OPTS} "${BASEURL}?verb=Identify" -O ${TMP}/identify.xml
 	granularity=$(getTargetData "granularity" "identify")
 
 	if [ "${granularity}" == "YYYY-MM-DDThh:mm:ssZ" ]; then
