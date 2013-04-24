@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-VERSION="0.9.8"
+VERSION="0.9.8.1"
 VERB="ListRecords"
 CONFIGFILE="/etc/shell-oaiharvester/config.xml"
 INSTALLDIR="/usr/share/shell-oaiharvester"
@@ -104,7 +104,7 @@ REPOSITORY_RECORDPATH=$(getRepositoryConfig "repository_path" ${REPOSITORY})
 # Set some sane defaults
 RECORDPATH=${RECORDPATH:-/tmp}
 TMP=${TMP:-/tmp}
-LOGFILE=${LOG:-/tmp/oaiharvester-log.csv}
+LOGFILE=${LOGFILE:-/tmp/oaiharvester-log.csv}
 REPOSITORY_RECORDPATH=${REPOSITORY_RECORDPATH:-${RECORDPATH}/${REPOSITORY}}
 
 [ ! -w ${LOGFILE} ] && die "Error: Logfile not writable: ${LOGFILE}"
@@ -134,7 +134,7 @@ rm -f ${TMP}/oaipage.xml ${TMP}/identify.xml > /dev/null 2>&1
 repository_timestamp="${REPOSITORY_RECORDPATH}/lasttimestamp.txt"
 if [ -f ${repository_timestamp} ]; then
 	# check out identify for datetime granularity
-	curl ${CURL_OPTS} "${BASEURL}?verb=Identify" -O ${TMP}/identify.xml
+	curl ${CURL_OPTS} "${BASEURL}?verb=Identify" -o ${TMP}/identify.xml
 	granularity=$(getTargetData "granularity" "identify")
 
 	if [ "${granularity}" == "YYYY-MM-DDThh:mm:ssZ" ]; then
