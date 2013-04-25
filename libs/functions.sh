@@ -29,7 +29,7 @@ function getTargetData {
 function checkHttpStatus {
 	local name=$1
 	local call=$2
-	local statuscode=$(wget ${WGET_OPTS} --server-response --quiet "${BASEURL}?verb=${call}" -O ${TMP}/${name}.xml 2>&1| grep "  HTTP/" | sed s/^\ \ // | cut -d " " -f 2)
+	local statuscode=$(curl ${CURL_OPTS} -s -o /dev/null -w "%{http_code}" "${BASEURL}?verb=${call}")
 
 	if [ "${statuscode}" == "200" ]; then
 		echo "${name}: OK"
@@ -136,7 +136,7 @@ function testRepository {
 	echo "# Validating the XML:"
 	echo "# fails without report are ignored strict wildcard errors"
 	if [ ! -f ${TMP}/OAI-PMH.xsd ]; then
-		wget ${WGET_OPTS} --quiet "http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd" -O ${TMP}/OAI-PMH.xsd
+		curl ${CURL_OPTS} --silent "http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd" -o ${TMP}/OAI-PMH.xsd
 	fi
 
 	# solve strict error message with:

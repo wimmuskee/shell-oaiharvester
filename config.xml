@@ -6,8 +6,6 @@
 	<temppath>/tmp/shell-harvester</temppath>
 	<!-- location of log file -->
 	<logfile>/tmp/shell-harvester/log.csv</logfile>
-	<!-- options for the wget command -->
-	<wgetopts>--quiet --limit-rate=200k --header="Accept-Encoding: gzip,deflate"</wgetopts>
 	<!-- options for the curl command -->
 	<curlopts>--silent --limit-rate 200k --header "Accept-Encoding: gzip,deflate"</curlopts>
 	<!-- command to execute before delete -->
