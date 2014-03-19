@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2012-2013 Wim Muskee <wimmuskee@gmail.com>
+# Copyright 2012-2014 Wim Muskee <wimmuskee@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-VERSION="0.9.10"
+VERSION="0.9.11"
 VERB="ListRecords"
 CONFIGFILE="/etc/shell-oaiharvester/config.xml"
 INSTALLDIR="/usr/share/shell-oaiharvester"
@@ -156,6 +156,7 @@ getRecords
 RESUMPTION=$(getTargetData "resumptiontoken" "oaipage")
 
 while [ "${RESUMPTION}" != "" ]; do
+	RESUMPTION=$(echo ${RESUMPTION} | sed -f ${INSTALLDIR}/urlescape.sed)
 	URL="${BASEURL}?verb=${VERB}&resumptionToken=${RESUMPTION}"
 	getRecords
 	RESUMPTION=$(getTargetData "resumptiontoken" "oaipage")
