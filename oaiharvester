@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-VERSION="0.9.11"
+VERSION="0.9.12"
 VERB="ListRecords"
 CONFIGFILE="/etc/shell-oaiharvester/config.xml"
 INSTALLDIR="/usr/share/shell-oaiharvester"
@@ -32,6 +32,7 @@ Options:
   -c, --config[=path]           Set a custom configuration file to use. By default, then
                                 one in /etc/shell-oaiharvester/config.xml is used.
   -h, --help                    Displays the shell-oaiharvester help message.
+  -l, --libdir[=path]           Provide another library directory (for testing purposes)
   -n, --no-records              When this is set, no record content is saved, only an
                                 empty file.
   -r, --repository[=id]         Sets the repository identifier to harvest. This corresponds
@@ -42,16 +43,9 @@ Options:
 EOF
 }
 
-if [ ! -f "${INSTALLDIR}/functions.sh" ]; then
-	echo "Error: No functions found in: ${INSTALLDIR}/functions.sh"
-	exit 1
-fi
-source "${INSTALLDIR}/functions.sh"
-
-
 # Reading options
-if ! args=$(getopt -n "$0" -o "c:hnr:tvz" \
-	-l "compress,config:,help,no-records,repository:,test,version" -- "$@")
+if ! args=$(getopt -n "$0" -o "c:hl:nr:tvz" \
+	-l "compress,config:,help,libdir:,no-records,repository:,test,version" -- "$@")
 then
 	exit 1
 fi
@@ -65,11 +59,19 @@ while true ; do
 		--test|-t) TEST="true" ;;
 		--version|-v) echo "${VERSION}"; exit 0 ;;
 		--compress|-z) COMPRESS="true" ;;
+		--libdir|-l) shift; INSTALLDIR=$1 ;;
 		--) shift ; break ;;
 		*) die "$0: Internal error!" ;;
 	esac
 	shift
 done
+
+# Loading functions
+if [ ! -f "${INSTALLDIR}/functions.sh" ]; then
+	echo "Error: No functions found in: ${INSTALLDIR}/functions.sh"
+	exit 1
+fi
+source "${INSTALLDIR}/functions.sh"
 
 # Check repository id
 if [ -z ${REPOSITORY} ]; then
@@ -106,6 +108,8 @@ TMP=${TMP:-/tmp}
 LOGFILE=${LOGFILE:-/tmp/oaiharvester-log.csv}
 REPOSITORY_RECORDPATH=${REPOSITORY_RECORDPATH:-${RECORDPATH}/${REPOSITORY}}
 
+mkdir -p ${TMP}
+touch ${LOGFILE}
 [ ! -w ${LOGFILE} ] && die "Error: Logfile not writable: ${LOGFILE}"
 
 # Find out if we want to validate only
@@ -117,10 +121,7 @@ fi
 # Making sure the repository storage and tmp dirs exists
 echo "Creating repository storage in: ${REPOSITORY_RECORDPATH}"
 mkdir -p ${REPOSITORY_RECORDPATH}
-mkdir -p ${TMP}
-touch ${LOGFILE}
 rm -f ${TMP}/oaipage.xml ${TMP}/identify.xml > /dev/null 2>&1
-
 
 # Setting other arguments if set in config.
 [ ! -z ${SET} ] && URI_SET="&set=${SET}"
