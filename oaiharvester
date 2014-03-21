@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-VERSION="0.9.12"
+VERSION="0.10"
 VERB="ListRecords"
 CONFIGFILE="/etc/shell-oaiharvester/config.xml"
 INSTALLDIR="/usr/share/shell-oaiharvester"
@@ -75,12 +75,12 @@ source "${INSTALLDIR}/functions.sh"
 
 # Check repository id
 if [ -z ${REPOSITORY} ]; then
-	die "Error: No repository id provided"
+	die "No repository id provided"
 fi
 
 # Check config file
 if [ -z ${CONFIGFILE} ] || [ ! -f ${CONFIGFILE} ]; then
-	die "Error: Config file not found: ${CONFIGFILE}"
+	die "Config file not found: ${CONFIGFILE}"
 fi
 
 # Reading oai repository info
@@ -99,8 +99,8 @@ CONDITIONAL=$(getRepositoryConfig "conditional" ${REPOSITORY})
 REPOSITORY_RECORDPATH=$(getRepositoryConfig "repository_path" ${REPOSITORY})
 
 # checking required values
-[ -z ${BASEURL} ] && die "Error: No baseurl found for repository: ${REPOSITORY}"
-[ -z ${PREFIX} ] && die "Error: No prefix found for repository: ${REPOSITORY}"
+[ -z ${BASEURL} ] && die "No baseurl found for repository: ${REPOSITORY}"
+[ -z ${PREFIX} ] && die "No prefix found for repository: ${REPOSITORY}"
 
 # Set some sane defaults
 RECORDPATH=${RECORDPATH:-/tmp}
@@ -110,7 +110,7 @@ REPOSITORY_RECORDPATH=${REPOSITORY_RECORDPATH:-${RECORDPATH}/${REPOSITORY}}
 
 mkdir -p ${TMP}
 touch ${LOGFILE}
-[ ! -w ${LOGFILE} ] && die "Error: Logfile not writable: ${LOGFILE}"
+[ ! -w ${LOGFILE} ] && die "Logfile not writable: ${LOGFILE}"
 
 # Find out if we want to validate only
 if [ "${TEST}" == "true" ]; then
@@ -154,6 +154,12 @@ echo "Starting harvest from: ${URL}"
 # Set current timestamp for next harvest
 date -u +'%FT%TZ' > ${repository_timestamp}
 getRecords
+
+ERROR=$(getTargetData "error" "oaipage")
+if [ "${ERROR}" != "" ]; then
+	die ${ERROR}
+fi
+
 RESUMPTION=$(getTargetData "resumptiontoken" "oaipage")
 
 while [ "${RESUMPTION}" != "" ]; do

@@ -34,6 +34,11 @@
 					<xsl:value-of select="/oai:OAI-PMH/oai:ListIdentifiers/oai:header[$record_nr]/@status"/>
 				</xsl:if>
 			</xsl:when>
+			<xsl:when test="$data='error'">
+				<xsl:if test="/oai:OAI-PMH/oai:error">
+					<xsl:value-of select="concat( /oai:OAI-PMH/oai:error/@code, ' - ',/oai:OAI-PMH/oai:error)"/>
+				</xsl:if>
+			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
 </xsl:stylesheet>

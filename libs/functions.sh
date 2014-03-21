@@ -1,7 +1,7 @@
 # Functions for the shell-oaiharvester.
 
 function die {
-	echo "$@" >&2
+	echo "Error: $@" >&2
 	exit 1
 }
 
