@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-VERSION="0.10"
+VERSION="0.11"
 VERB="ListRecords"
 CONFIGFILE="/etc/shell-oaiharvester/config.xml"
 INSTALLDIR="/usr/share/shell-oaiharvester"
@@ -152,7 +152,7 @@ echo "Starting harvest from: ${URL}"
 # Now, get the initial page and the records
 # if there is a resumptionToken, retrieve other pages
 # Set current timestamp for next harvest
-date -u +'%FT%TZ' > ${repository_timestamp}
+startharvestts=$(date -u +'%FT%TZ')
 getRecords
 
 ERROR=$(getTargetData "error" "oaipage")
@@ -168,6 +168,9 @@ while [ "${RESUMPTION}" != "" ]; do
 	getRecords
 	RESUMPTION=$(getTargetData "resumptiontoken" "oaipage")
 done
+
+# When finished, save startharvest timestamp
+echo ${startharvestts} > ${repository_timestamp}
 
 # cleaning
 rm -f ${TMP}/oaipage.xml ${TMP}/identify.xml

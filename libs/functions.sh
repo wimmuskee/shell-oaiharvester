@@ -25,6 +25,21 @@ function getTargetData {
 	echo $(xsltproc --stringparam data ${data} ${INSTALLDIR}/retrieveData.xsl ${TMP}/${target}.xml)
 }
 
+# Checks if downloaded oaipage is valid for xslt processing.
+function checkValidXml {
+	local url=$1
+
+	xsltproc --stringparam data record_count ${INSTALLDIR}/retrieveData.xsl ${TMP}/oaipage.xml &>/dev/null
+	response=$?
+	if [ "$response" -ne "0" ]; then
+		case $response in
+			6) msg="Error in downloaded oaipage";;
+			*) msg="Other xsltproc error: $response";;
+		esac
+		die "${msg} for request ${url}"
+	fi
+}
+
 # Check if the HTTP status code returns 200
 function checkHttpStatus {
 	local name=$1
@@ -47,6 +62,7 @@ function getRecords {
 	local downloadtime=$(echo "scale=3; ($endtime - $starttime)/1000" | bc)
 
 	# process the downloaded xml
+	checkValidXml ${URL}
 	local starttime=$(date +%s%N | cut -b1-13)
 	local conditional="${REPOSITORY_RECORDPATH}/${CONDITIONAL}"
 	local count=1
