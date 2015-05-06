@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2012-2014 Wim Muskee <wimmuskee@gmail.com>
+# Copyright 2012-2015 Wim Muskee <wimmuskee@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-VERSION="0.11"
+VERSION="0.11.1"
 VERB="ListRecords"
 CONFIGFILE="/etc/shell-oaiharvester/config.xml"
 INSTALLDIR="/usr/share/shell-oaiharvester"
@@ -42,6 +42,12 @@ Options:
   -z, --compress                Compress stored records with xz.
 EOF
 }
+
+# root check
+if [ $(whoami) == "root" ]; then
+	echo "Error: don't use this tool logged in as root."
+	exit 1
+fi
 
 # Reading options
 if ! args=$(getopt -n "$0" -o "c:hl:nr:tvz" \
