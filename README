@@ -26,6 +26,8 @@ Using shell-harvester:
       - ${identifier} holds the identifier
       - ${filename) is the identifier with optional xz extension
       - ${path} holds the absolute path of the record
+    - repository update and delete cmd's are executed before
+      the generic ones if available
     - set, from, until, conditional and recordpath are optional
 
 3. Run the harvester

@@ -81,6 +81,10 @@ function getRecords {
 		local status=$(xsltproc --stringparam data headerstatus --param record_nr ${count} ${INSTALLDIR}/retrieveData.xsl ${TMP}/oaipage.xml)
 
 		if [ "${status}" == "deleted" ]; then
+			if [ ! -z "${REPOSITORY_DELETE_CMD}" ]; then
+				eval ${REPOSITORY_DELETE_CMD}
+			fi
+
 			if [ ! -z "${DELETE_CMD}" ]; then
 				eval ${DELETE_CMD}
 			fi
@@ -110,6 +114,10 @@ function getRecords {
 				elif [ "${COMPRESS}" == "true" ]; then
 					 xz -c ${TMP}/passed-conditional.xml > "${path}"
 					 rm ${TMP}/passed-conditional.xml
+				fi
+
+				if [ ! -z "${REPOSITORY_UPDATE_CMD}" ]; then
+					eval ${REPOSITORY_UPDATE_CMD}
 				fi
 
 				if [ ! -z "${UPDATE_CMD}" ]; then

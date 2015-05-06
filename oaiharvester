@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-VERSION="0.11.1"
+VERSION="0.12"
 VERB="ListRecords"
 CONFIGFILE="/etc/shell-oaiharvester/config.xml"
 INSTALLDIR="/usr/share/shell-oaiharvester"
@@ -103,6 +103,9 @@ FROM=$(getRepositoryConfig "from" ${REPOSITORY})
 UNTIL=$(getRepositoryConfig "until" ${REPOSITORY})
 CONDITIONAL=$(getRepositoryConfig "conditional" ${REPOSITORY})
 REPOSITORY_RECORDPATH=$(getRepositoryConfig "repository_path" ${REPOSITORY})
+REPOSITORY_UPDATE_CMD=$(getRepositoryConfig "repository_updatecmd" ${REPOSITORY})
+REPOSITORY_DELETE_CMD=$(getRepositoryConfig "repository_deletecmd" ${REPOSITORY})
+
 
 # checking required values
 [ -z ${BASEURL} ] && die "No baseurl found for repository: ${REPOSITORY}"

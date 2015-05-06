@@ -21,5 +21,9 @@
 		<until>2012-03-01</until>
 		<conditional>only-context-po.xsl</conditional>
 		<recordpath>/tmp/records/repository_id</recordpath>
+		<!-- command to execute before delete -->
+		<!-- <deletecmd>updateMyDatabase.sh ${path}</deletecmd> -->
+		<!-- command to execute after update -->
+		<!-- <updatecmd>echo ${identifier} >> /tmp/harvested.txt</updatecmd> -->
 	</repository>
 </config>
