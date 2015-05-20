@@ -28,15 +28,10 @@ function getTargetData {
 # Checks if downloaded oaipage is valid for xslt processing.
 function checkValidXml {
 	local url=$1
+	local response=$(xsltproc --novalid --stringparam data responsedate ${INSTALLDIR}/retrieveData.xsl ${TMP}/oaipage.xml)
 
-	xsltproc --stringparam data record_count ${INSTALLDIR}/retrieveData.xsl ${TMP}/oaipage.xml &>/dev/null
-	response=$?
-	if [ "$response" -ne "0" ]; then
-		case $response in
-			6) msg="Error in downloaded oaipage";;
-			*) msg="Other xsltproc error: $response";;
-		esac
-		die "${msg} for request ${url}"
+	if [ "${response}" == "" ]; then
+		die "No responseDate found in source, probably not OAI-PMH: ${url}"
 	fi
 }
 
