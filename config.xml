@@ -7,7 +7,7 @@
 	<!-- location of log file -->
 	<logfile>/tmp/oaiharvester-log.csv</logfile>
 	<!-- options for the curl command -->
-	<curlopts>--silent --limit-rate 200k --header "Accept-Encoding: gzip,deflate"</curlopts>
+	<curlopts>--retry 5 --silent --limit-rate 200k --header "Accept-Encoding: gzip,deflate"</curlopts>
 	<!-- command to execute before delete -->
 	<!-- <deletecmd>updateMyDatabase.sh ${path}</deletecmd> -->
 	<!-- command to execute after update -->
