@@ -19,6 +19,7 @@
 		<set>test</set>
 		<from>2012-02-29</from>
 		<until>2012-03-01</until>
+		<!-- <resumptiontoken>lom-10</resumptiontoken> -->
 		<conditional>only-context-po.xsl</conditional>
 		<recordpath>/tmp/records/repository_id</recordpath>
 		<!-- command to execute before delete -->

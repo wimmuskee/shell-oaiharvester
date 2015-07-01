@@ -42,10 +42,13 @@
   				<xsl:value-of select="/cfg:config/cfg:repository[@id=$repository]/cfg:from"/>
 			</xsl:when>
 			<xsl:when test="$data='until'">
-  				<xsl:value-of select="/cfg:config/cfg:repository[@id=$repository]/cfg:until"/>
+				<xsl:value-of select="/cfg:config/cfg:repository[@id=$repository]/cfg:until"/>
+			</xsl:when>
+			<xsl:when test="$data='resumptiontoken'">
+				<xsl:value-of select="/cfg:config/cfg:repository[@id=$repository]/cfg:resumptiontoken"/>
 			</xsl:when>
 			<xsl:when test="$data='conditional'">
-  				<xsl:value-of select="/cfg:config/cfg:repository[@id=$repository]/cfg:conditional"/>
+				<xsl:value-of select="/cfg:config/cfg:repository[@id=$repository]/cfg:conditional"/>
 			</xsl:when>
 			<xsl:when test="$data='repository_path'">
 				<xsl:value-of select="/cfg:config/cfg:repository[@id=$repository]/cfg:recordpath"/>

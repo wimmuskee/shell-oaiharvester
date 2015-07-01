@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-VERSION="0.13"
+VERSION="0.14"
 VERB="ListRecords"
 CONFIGFILE="/etc/shell-oaiharvester/config.xml"
 INSTALLDIR="/usr/share/shell-oaiharvester"
@@ -101,6 +101,7 @@ PREFIX=$(getRepositoryConfig "metadataprefix" ${REPOSITORY})
 SET=$(getRepositoryConfig "set" ${REPOSITORY})
 FROM=$(getRepositoryConfig "from" ${REPOSITORY})
 UNTIL=$(getRepositoryConfig "until" ${REPOSITORY})
+RESUMPTION=$(getRepositoryConfig "resumptiontoken" ${REPOSITORY})
 CONDITIONAL=$(getRepositoryConfig "conditional" ${REPOSITORY})
 REPOSITORY_RECORDPATH=$(getRepositoryConfig "repository_path" ${REPOSITORY})
 REPOSITORY_UPDATE_CMD=$(getRepositoryConfig "repository_updatecmd" ${REPOSITORY})
@@ -155,7 +156,12 @@ if [ -f ${repository_timestamp} ]; then
 fi
 
 # Sets the initial harvest uri
-URL="${BASEURL}?verb=${VERB}&metadataPrefix=${PREFIX}${URI_SET}${URI_FROM}${URI_UNTIL}"
+# if resumptiontoken set, this overrides normal behaviour
+if [ "${RESUMPTION}" != "" ]; then
+	URL="${BASEURL}?verb=${VERB}&metadataPrefix=${PREFIX}${URI_SET}${URI_FROM}${URI_UNTIL}"
+else
+	URL="${BASEURL}?verb=${VERB}&resumptionToken=${RESUMPTION}"
+fi
 echo "Starting harvest from: ${URL}"
 
 # Now, get the initial page and the records
