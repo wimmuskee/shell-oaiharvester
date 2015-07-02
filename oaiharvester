@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-VERSION="0.14"
+VERSION="0.14.1"
 VERB="ListRecords"
 CONFIGFILE="/etc/shell-oaiharvester/config.xml"
 INSTALLDIR="/usr/share/shell-oaiharvester"
@@ -158,9 +158,9 @@ fi
 # Sets the initial harvest uri
 # if resumptiontoken set, this overrides normal behaviour
 if [ "${RESUMPTION}" != "" ]; then
-	URL="${BASEURL}?verb=${VERB}&metadataPrefix=${PREFIX}${URI_SET}${URI_FROM}${URI_UNTIL}"
-else
 	URL="${BASEURL}?verb=${VERB}&resumptionToken=${RESUMPTION}"
+else
+	URL="${BASEURL}?verb=${VERB}&metadataPrefix=${PREFIX}${URI_SET}${URI_FROM}${URI_UNTIL}"
 fi
 echo "Starting harvest from: ${URL}"
 
