@@ -134,7 +134,7 @@ function getRecords {
 	local processtime=$(echo "scale=3; ($endtime - $starttime)/1000" | bc)
 
 	# write logline
-	echo "$(date '+%F %T'),$REPOSITORY,$record_count,$downloadtime,$processtime" >> ${LOGFILE}
+	echo "$(date '+%F %T'),$REPOSITORY,$URL,$record_count,$downloadtime,$processtime" >> ${LOGFILE}
 }
 
 function testRepository {
