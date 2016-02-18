@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-VERSION="0.15"
+VERSION="0.16"
 VERB="ListRecords"
 CONFIGFILE="/etc/shell-oaiharvester/config.xml"
 INSTALLDIR="/usr/share/shell-oaiharvester"
@@ -163,6 +163,12 @@ else
 	URL="${BASEURL}?verb=${VERB}&metadataPrefix=${PREFIX}${URI_SET}${URI_FROM}${URI_UNTIL}"
 fi
 echo "Starting harvest from: ${URL}"
+
+# only check status code first time calling
+statuscode=$(getHttpStatus ${URL})
+if [ "${statuscode}" != "200" ]; then
+	die "received status code ${statuscode}, exiting"
+fi
 
 # Now, get the initial page and the records
 # if there is a resumptionToken, retrieve other pages

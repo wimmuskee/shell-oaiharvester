@@ -35,6 +35,11 @@ function checkValidXml {
 	fi
 }
 
+function getHttpStatus {
+	local url=$1
+	echo $(curl ${CURL_OPTS} -s -o /dev/null -w "%{http_code}" "${url}")
+}
+
 # Check if the HTTP status code returns 200
 function checkHttpStatus {
 	local name=$1
