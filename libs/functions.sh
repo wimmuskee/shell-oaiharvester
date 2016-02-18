@@ -35,22 +35,10 @@ function checkValidXml {
 	fi
 }
 
+# returns http status code
 function getHttpStatus {
 	local url=$1
 	echo $(curl ${CURL_OPTS} -s -o /dev/null -w "%{http_code}" "${url}")
-}
-
-# Check if the HTTP status code returns 200
-function checkHttpStatus {
-	local name=$1
-	local call=$2
-	local statuscode=$(curl ${CURL_OPTS} -s -o /dev/null -w "%{http_code}" "${BASEURL}?verb=${call}")
-
-	if [ "${statuscode}" == "200" ]; then
-		echo "${name}: OK"
-	else
-		echo "${name}: FAIL: ${statuscode}"
-	fi
 }
 
 # getRecords function
@@ -143,17 +131,26 @@ function getRecords {
 }
 
 function testRepository {
-	echo "# Checking if pages exist:"
-	checkHttpStatus "identify" "Identify"
-	checkHttpStatus "listmetadataformats" "ListMetadataFormats"
-	
-	if [ -z ${SET} ]; then
-		checkHttpStatus "listrecords" "ListRecords&metadataPrefix=${PREFIX}"
-		checkHttpStatus "listidentifiers" "ListIdentifiers&metadataPrefix=${PREFIX}"
+	echo "# checking status code"
+	statuscode=$(getHttpStatus "${BASEURL}?verb=Identify")
+	if [ "${statuscode}" != "200" ]; then
+		die "received status code ${statuscode}, exiting"
 	else
-		checkHttpStatus "listsets" "ListSets"
-		checkHttpStatus "listrecords" "ListRecords&metadataPrefix=${PREFIX}&set=${SET}"
-		checkHttpStatus "listidentifiers" "ListIdentifiers&metadataPrefix=${PREFIX}&set=${SET}"
+		echo "status ok"
+	fi
+
+	echo
+	echo "# Downloading pages:"
+	curl ${CURL_OPTS} "${BASEURL}?verb=Identify" -o "${TMP}/identify.xml"
+	curl ${CURL_OPTS} "${BASEURL}?verb=ListMetadataFormats" -o "${TMP}/listmetadataformats.xml"
+
+	if [ -z ${SET} ]; then
+		curl ${CURL_OPTS} "${BASEURL}?verb=ListRecords&metadataPrefix=${PREFIX}" -o "${TMP}/listrecords.xml"
+		curl ${CURL_OPTS} "${BASEURL}?verb=ListIdentifiers&metadataPrefix=${PREFIX}" -o "${TMP}/listidentifiers.xml"
+	else
+		curl ${CURL_OPTS} "${BASEURL}?verb=ListSets" -o "${TMP}/listsets.xml"
+		curl ${CURL_OPTS} "${BASEURL}?verb=ListRecords&metadataPrefix=${PREFIX}&set=${SET}" -o "${TMP}/listrecords.xml"
+		curl ${CURL_OPTS} "${BASEURL}?verb=ListIdentifiers&metadataPrefix=${PREFIX}&set=${SET}" -o "${TMP}/listidentifiers.xml"
 	fi
 
 	echo
