@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2012-2015 Wim Muskee <wimmuskee@gmail.com>
+# Copyright 2012-2016 Wim Muskee <wimmuskee@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-VERSION="0.17"
+VERSION="0.18"
 VERB="ListRecords"
 CONFIGFILE="/etc/shell-oaiharvester/config.xml"
 INSTALLDIR="/usr/share/shell-oaiharvester"
@@ -129,8 +129,12 @@ if [ "${TEST}" == "true" ]; then
 fi
 
 # Making sure the repository storage and tmp dirs exists
-echo "Creating repository storage in: ${REPOSITORY_RECORDPATH}"
-mkdir -p ${REPOSITORY_RECORDPATH}
+if [ -d ${REPOSITORY_RECORDPATH} ]; then
+	echo "Using repository storage in: ${REPOSITORY_RECORDPATH}"
+else
+	echo "Creating repository storage in: ${REPOSITORY_RECORDPATH}"
+	mkdir -p ${REPOSITORY_RECORDPATH}
+fi
 rm -f ${TMP}/oaipage.xml ${TMP}/identify.xml > /dev/null 2>&1
 
 # Setting other arguments if set in config.
