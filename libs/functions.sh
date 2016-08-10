@@ -2,6 +2,7 @@
 
 function die {
 	echo "Error: $@" >&2
+	[ -z ${TMP} ] && echo "maybe you want to see or delete the temporary workfiles in ${TMP}"
 	exit 1
 }
 
@@ -156,8 +157,8 @@ function testRepository {
 	echo
 	echo "# Validating the XML:"
 	echo "# fails without report are ignored strict wildcard errors"
-	if [ ! -f ${TMP}/OAI-PMH.xsd ]; then
-		curl ${CURL_OPTS} --silent "http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd" -o ${TMP}/OAI-PMH.xsd
+	if [ ! -f /tmp/OAI-PMH.xsd ]; then
+		curl ${CURL_OPTS} --silent "http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd" -o /tmp/OAI-PMH.xsd
 	fi
 
 	# solve strict error message with:
