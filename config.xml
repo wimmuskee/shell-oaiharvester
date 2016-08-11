@@ -6,6 +6,10 @@
 	<temppath>/tmp/shell-harvester</temppath>
 	<!-- location of log file -->
 	<logfile>/tmp/oaiharvester-log.csv</logfile>
+	<!-- type of logging:
+		"combined" putting all instance logs in one file (default), or
+		"instance", and have a log file for each started instance -->
+	<logtype>combined</logtype>
 	<!-- options for the curl command -->
 	<curlopts>--retry 5 --silent --limit-rate 200k --header "Accept-Encoding: gzip,deflate"</curlopts>
 	<!-- command to execute before delete -->

@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-VERSION="0.19"
+VERSION="0.20"
 VERB="ListRecords"
 CONFIGFILE="/etc/shell-oaiharvester/config.xml"
 INSTALLDIR="/usr/share/shell-oaiharvester"
@@ -93,6 +93,7 @@ fi
 RECORDPATH=$(getGenericConfig "recordpath")
 TMP=$(getGenericConfig "temppath")
 LOGFILE=$(getGenericConfig "logfile")
+LOGTYPE=$(getGenericConfig "logtype")
 CURL_OPTS=$(getGenericConfig "curlopts")
 UPDATE_CMD=$(getGenericConfig "updatecmd")
 DELETE_CMD=$(getGenericConfig "deletecmd")
@@ -111,6 +112,14 @@ REPOSITORY_DELETE_CMD=$(getRepositoryConfig "repository_deletecmd" ${REPOSITORY}
 [ -z ${BASEURL} ] && die "No baseurl found for repository: ${REPOSITORY}"
 [ -z ${PREFIX} ] && die "No prefix found for repository: ${REPOSITORY}"
 
+# making sure we have a good logtype
+LOGTYPE=${LOGTYPE:-"combined"}
+if [ "${LOGTYPE}" != "combined" ] && [ "${LOGTYPE}" != "instance" ]; then
+	echo "Logtype should be configured to either combined or instance."
+	echo "setting to combined"
+	LOGTYPE="combined"
+fi
+
 # generating random number for workfiles path
 TMP_RANDOM=$(shuf -i 1-100000 -n 1)
 [ -z ${TMP_RANDOM} ] && die "Generating random temppath"
@@ -121,21 +130,28 @@ RECORDPATH=${RECORDPATH:-/tmp}
 TMP=${TMP:-/tmp}
 TMP_RANDOM_PATH="shell-oaiharvester-${TMP_RANDOM}"
 TMP="${TMP}/${TMP_RANDOM_PATH}"
-LOGFILE=${LOGFILE:-/tmp/oaiharvester-log.csv}
 REPOSITORY_RECORDPATH=${REPOSITORY_RECORDPATH:-${RECORDPATH}/${REPOSITORY}}
 
 echo "Creating temporary workdir in ${TMP}"
 mkdir -p ${TMP}
-touch ${LOGFILE}
-[ ! -w ${LOGFILE} ] && die "Logfile not writable: ${LOGFILE}"
 
 # Find out if we want to validate only
+# no need for logfile in this step
 if [ "${TEST}" == "true" ]; then
 	testRepository
 	exit 0
 fi
 
-# Making sure the repository storage and tmp dirs exists
+# setting logfile based on logtype
+LOGFILE=${LOGFILE:-/tmp/oaiharvester-log.csv}
+if [ "${LOGTYPE}" == "instance" ]; then
+	LOGFILE="${LOGFILE}.${TMP_RANDOM}"
+fi
+
+touch ${LOGFILE}
+[ ! -w ${LOGFILE} ] && die "Logfile not writable: ${LOGFILE}"
+
+# Making sure the repository storage dirs exists
 if [ -d ${REPOSITORY_RECORDPATH} ]; then
 	echo "Using repository storage in: ${REPOSITORY_RECORDPATH}"
 else
@@ -202,6 +218,11 @@ done
 
 # When finished, save startharvest timestamp
 echo ${startharvestts} > ${repository_timestamp}
+
+# Print the instance logfile location
+if [ "${LOGTYPE}" == "instance" ]; then
+	echo "The logfile for this instance was saved in ${LOGFILE}"
+fi
 
 # cleaning
 rm -rf ${TMP}
