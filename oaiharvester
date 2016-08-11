@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-VERSION="0.20"
+VERSION="0.21"
 VERB="ListRecords"
 CONFIGFILE="/etc/shell-oaiharvester/config.xml"
 INSTALLDIR="/usr/share/shell-oaiharvester"
@@ -43,10 +43,36 @@ Options:
 EOF
 }
 
+function cleanup {
+	arg=${1:-1}
+
+	# Print the instance logfile location
+	if [ ! -z ${LOGFILE} ] && [ "${LOGTYPE}" == "instance" ]; then
+		echo "The logfile for this instance was saved in ${LOGFILE}"
+	fi
+
+	if [ ! -z ${TMP} ]; then
+		if [ "${arg}" == 0 ]; then
+			echo "Removing temporary workfiles"
+			rm -rf ${TMP}
+		else
+			echo "Maybe you want to see or delete the temporary workfiles in ${TMP}"
+		fi
+	fi
+
+	exit $arg
+}
+
+function die {
+	echo "Error: $@" >&2
+	cleanup 1
+}
+
+trap cleanup SIGHUP SIGINT SIGTERM
+
 # root check
 if [ $(whoami) == "root" ]; then
-	echo "Error: don't use this tool logged in as root."
-	exit 1
+	die "Don't use this tool logged in as root."
 fi
 
 # Reading options
@@ -74,8 +100,7 @@ done
 
 # Loading functions
 if [ ! -f "${INSTALLDIR}/functions.sh" ]; then
-	echo "Error: No functions found in: ${INSTALLDIR}/functions.sh"
-	exit 1
+	die "No functions found in: ${INSTALLDIR}/functions.sh"
 fi
 source "${INSTALLDIR}/functions.sh"
 
@@ -219,12 +244,4 @@ done
 # When finished, save startharvest timestamp
 echo ${startharvestts} > ${repository_timestamp}
 
-# Print the instance logfile location
-if [ "${LOGTYPE}" == "instance" ]; then
-	echo "The logfile for this instance was saved in ${LOGFILE}"
-fi
-
-# cleaning
-rm -rf ${TMP}
-
-exit 0
+cleanup 0

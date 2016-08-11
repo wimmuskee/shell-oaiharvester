@@ -1,11 +1,5 @@
 # Functions for the shell-oaiharvester.
 
-function die {
-	echo "Error: $@" >&2
-	[ -z ${TMP} ] && echo "maybe you want to see or delete the temporary workfiles in ${TMP}"
-	exit 1
-}
-
 # Gets generic options from config file.
 function getGenericConfig {
 	local data=$1
