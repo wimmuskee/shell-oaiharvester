@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-VERSION="0.21"
+VERSION="0.22"
 VERB="ListRecords"
 CONFIGFILE="/etc/shell-oaiharvester/config.xml"
 INSTALLDIR="/usr/share/shell-oaiharvester"
@@ -186,16 +186,15 @@ fi
 
 # Setting other arguments if set in config.
 [ ! -z ${SET} ] && URI_SET="&set=${SET}"
-[ ! -z ${FROM} ] && URI_FROM="&from=${FROM}"
 [ ! -z ${UNTIL} ] && URI_UNTIL="&until=$UNTIL"
 
 # Checks for a last harvest timestamp, and uses it
 # according to the granularity settings
 # Overwrites repository from config setting.
+curl ${CURL_OPTS} "${BASEURL}?verb=Identify" -o ${TMP}/identify.xml
 repository_timestamp="${REPOSITORY_RECORDPATH}/lasttimestamp.txt"
 if [ -f ${repository_timestamp} ]; then
 	# check out identify for datetime granularity
-	curl ${CURL_OPTS} "${BASEURL}?verb=Identify" -o ${TMP}/identify.xml
 	granularity=$(getTargetData "granularity" "identify")
 
 	if [ "${granularity}" == "YYYY-MM-DDThh:mm:ssZ" ]; then
@@ -204,6 +203,15 @@ if [ -f ${repository_timestamp} ]; then
 		timestamp=$(cat ${repository_timestamp} | awk -F "T" '{print $1}')
 	fi
 	URI_FROM="&from=${timestamp}"
+else
+	# in case of first harvest, use the Identify earliestDatestamp
+	# assuming the Identify earliestDatestamp conforms to the repo's granularity
+	earliestdatestamp=$(getTargetData "earliestDatestamp" "identify")
+	URI_FROM="&from=${earliestdatestamp}"
+	
+	# however, if FROM is set manually in the config, use that
+	# this is useful for debugging purposes
+	[ ! -z ${FROM} ] && URI_FROM="&from=${FROM}"
 fi
 
 # Sets the initial harvest uri

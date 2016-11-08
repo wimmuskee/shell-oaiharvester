@@ -26,6 +26,9 @@
 			<xsl:when test="$data='granularity'">
 				<xsl:value-of select="/oai:OAI-PMH/oai:Identify/oai:granularity"/>
 			</xsl:when>
+			<xsl:when test="$data='earliestDatestamp'">
+				<xsl:value-of select="/oai:OAI-PMH/oai:Identify/oai:earliestDatestamp"/>
+			</xsl:when>
 			<xsl:when test="$data='responsedate'">
 				<xsl:value-of select="/oai:OAI-PMH/oai:responseDate"/>
 			</xsl:when>
