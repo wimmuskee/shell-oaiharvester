@@ -50,6 +50,8 @@ function getRecords {
 	local conditional="${REPOSITORY_RECORDPATH}/${CONDITIONAL}"
 	local count=1
 	local record_count=$(getTargetData "record_count" "oaipage")
+	local responsedatetime=$(getTargetData "responsedate" "oaipage")
+	local responsedate=${responsedatetime:0:10}
 
 	while [ ${count} -le ${record_count} ]; do
 		# get oai identifier and actual storage dir (based on first 2 chars of md5sum identifier)
@@ -59,7 +61,7 @@ function getRecords {
 		local namemd5=$(echo "${identifier}" | md5sum)
 		local storedir=${namemd5:0:2}
 		local path="${REPOSITORY_RECORDPATH}/${storedir}/${filename}"
-		
+
 		# check if status is deleted
 		local status=$(xsltproc --stringparam data headerstatus --param record_nr ${count} ${INSTALLDIR}/retrieveData.xsl ${TMP}/oaipage.xml)
 
