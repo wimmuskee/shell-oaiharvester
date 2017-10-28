@@ -58,8 +58,7 @@ function getRecords {
 		local identifier=$(xsltproc --stringparam data identifier --param record_nr ${count} ${INSTALLDIR}/retrieveData.xsl ${TMP}/oaipage.xml | sed s/\\//\%2F/g | sed s/\&/\%26/g | sed s/\ /\%20/g)
 		local filename="${identifier}"
 		[ "${COMPRESS}" == "true" ] && filename="${filename}.xz"
-		local namemd5=$(echo "${identifier}" | md5sum)
-		local storedir=${namemd5:0:2}
+		local storedir=$(echo "${identifier}" | md5sum | head -c 2)
 		local path="${REPOSITORY_RECORDPATH}/${storedir}/${filename}"
 
 		# check if status is deleted
