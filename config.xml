@@ -11,7 +11,7 @@
 		"instance", and have a log file for each started instance -->
 	<logtype>combined</logtype>
 	<!-- options for the curl command -->
-	<curlopts>--retry 5 --silent --limit-rate 200k --header "Accept-Encoding: gzip,deflate"</curlopts>
+	<curlopts>--retry 5 --silent --limit-rate 200k --user-agent "shell-oaiharvester"</curlopts>
 	<!-- command to execute before delete -->
 	<!-- <deletecmd>updateMyDatabase.sh ${path}</deletecmd> -->
 	<!-- command to execute after update -->
