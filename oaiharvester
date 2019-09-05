@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2012-2017 Wim Muskee <wimmuskee@gmail.com>
+# Copyright 2012-2019 Wim Muskee <wimmuskee@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-VERSION="1.1.0"
+VERSION="1.2.0"
 VERB="ListRecords"
 CONFIGFILE="/etc/shell-oaiharvester/config.xml"
 INSTALLDIR="/usr/share/shell-oaiharvester"
@@ -132,6 +132,8 @@ CONDITIONAL=$(getRepositoryConfig "conditional" ${REPOSITORY})
 REPOSITORY_RECORDPATH=$(getRepositoryConfig "repository_path" ${REPOSITORY})
 REPOSITORY_UPDATE_CMD=$(getRepositoryConfig "repository_updatecmd" ${REPOSITORY})
 REPOSITORY_DELETE_CMD=$(getRepositoryConfig "repository_deletecmd" ${REPOSITORY})
+USERNAME=$(getRepositoryConfig "username" ${REPOSITORY})
+PASSWORD=$(getRepositoryConfig "password" ${REPOSITORY})
 
 # checking required values
 [ -z ${BASEURL} ] && die "No baseurl found for repository: ${REPOSITORY}"
@@ -156,6 +158,11 @@ TMP=${TMP:-/tmp}
 TMP_RANDOM_PATH="shell-oaiharvester-${TMP_RANDOM}"
 TMP="${TMP}/${TMP_RANDOM_PATH}"
 REPOSITORY_RECORDPATH=${REPOSITORY_RECORDPATH:-${RECORDPATH}/${REPOSITORY}}
+
+# Setting credentials for curl
+CREDENTIALS=${USERNAME}
+[ ! -z ${PASSWORD} ] && CREDENTIALS="${CREDENTIALS}:${PASSWORD}"
+[ ! -z ${CREDENTIALS} ] && CURL_OPTS="${CURL_OPTS} -u ${CREDENTIALS}" 
 
 echo "Creating temporary workdir in ${TMP}"
 mkdir -p ${TMP}
