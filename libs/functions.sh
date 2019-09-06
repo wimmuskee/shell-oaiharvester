@@ -33,7 +33,7 @@ function checkValidXml {
 # returns http status code
 function getHttpStatus {
 	local url=$1
-	echo $(curl ${CURL_OPTS} -s -o /dev/null -w "%{http_code}" "${url}")
+	echo $(curl -I ${CURL_OPTS} -s -o /dev/null -w "%{http_code}" "${url}")
 }
 
 # getRecords function
