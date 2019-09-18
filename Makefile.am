@@ -4,7 +4,7 @@ bin_PROGRAMS = oaiharvester
 oaiharvester_SOURCES = oaiharvester
 
 pkgdata_DATA = libs/*
-doc_DATA = README COPYING
+doc_DATA = README.md COPYING
 config_DATA = config.xml
 
 man1_MANS = oaiharvester.1
