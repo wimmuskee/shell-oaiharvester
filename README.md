@@ -17,7 +17,7 @@ Use sudo/root where needed.
  - mkdir /usr/share/shell-oaiharvester
  - cp libs/* /usr/share/shell-oaiharvester/.
  - mkdir /etc/shell-oaiharvester
- - cp config.xml /etc/shell-oaiharvester/config.xml
+ - cp config.example.xml /etc/shell-oaiharvester/config.xml
 
 ## Usage
 
