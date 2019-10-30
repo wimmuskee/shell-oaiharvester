@@ -51,7 +51,10 @@ Not harvest, but validate the repository
 ```oaiharvester -r <repository_id> -t```
 
 ### Logs
-Unless customized, the log file of the harvest process is stored at */tmp/shell-harvester/log.csv*. The logger uses a simple csv format with a line for each downloaded page.
-```YYYY-MM-DD HH:MM:SS,repository,record count,download time,process time```
+Unless customized, the log file of the harvest process is stored at */tmp/oaiharvester-log.csv*. The logger uses a simple csv format with a line for each downloaded page:
+```YYYY-MM-DD HH:MM:SS,repository,record count,download time,process time```.
 
 The logtype can be configured in the harvester config file, either "combined" putting all instance logs in one file (default), or "instance", and have a log file for each started instance 
+
+A recordlog can also be set, by default at */dev/null* because depending on repositories this file can increase in size a lot. This has the following format:
+```YYYY-MM-DD HH:MM:SS,repository,record datestamp,record identifier```.

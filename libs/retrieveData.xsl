@@ -16,6 +16,14 @@
 					<xsl:value-of select="/oai:OAI-PMH/oai:ListIdentifiers/oai:header[$record_nr]/oai:identifier"/>
 				</xsl:if>
 			</xsl:when>
+			<xsl:when test="$data='datestamp'">
+				<xsl:if test="/oai:OAI-PMH/oai:ListRecords">
+					<xsl:value-of select="/oai:OAI-PMH/oai:ListRecords/oai:record[$record_nr]/oai:header/oai:datestamp"/>
+				</xsl:if>
+				<xsl:if test="/oai:OAI-PMH/oai:ListIdentifiers">
+					<xsl:value-of select="/oai:OAI-PMH/oai:ListIdentifiers/oai:header[$record_nr]/oai:datestamp"/>
+				</xsl:if>
+			</xsl:when>
 			<!-- count headers, independent of ListRecords or ListIdentifiers -->
 			<xsl:when test="$data='record_count'">
 				<xsl:value-of select="count(//oai:header)"/>

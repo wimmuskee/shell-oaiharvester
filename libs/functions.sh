@@ -56,6 +56,7 @@ function getRecords {
 	while [ ${count} -le ${record_count} ]; do
 		# get oai identifier and actual storage dir (based on first 2 chars of md5sum identifier)
 		local identifier=$(xsltproc --stringparam data identifier --param record_nr ${count} ${INSTALLDIR}/retrieveData.xsl ${TMP}/oaipage.xml | sed s/\\//\%2F/g | sed s/\&/\%26/g | sed s/\ /\%20/g)
+		local datestamp=$(xsltproc --stringparam data datestamp --param record_nr ${count} ${INSTALLDIR}/retrieveData.xsl ${TMP}/oaipage.xml)
 		local filename="${identifier}"
 		[ "${COMPRESS}" == "true" ] && filename="${filename}.xz"
 		local storedir=$(echo "${identifier}" | md5sum | head -c 2)
@@ -115,7 +116,7 @@ function getRecords {
 			#xsltproc modules/lom/stripUrls.xsl /tmp/record.xml > "${STORE_DIR}/${name}"
 			#rm /tmp/record.xml
 		fi
-
+		echo "$(date '+%F %T'),${REPOSITORY},${datestamp},${identifier}" >> ${RECORDLOGFILE}
 		count=$(( ${count} + 1 ))
 	done
 	

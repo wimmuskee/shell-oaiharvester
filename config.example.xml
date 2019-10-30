@@ -10,6 +10,8 @@
 		"combined" putting all instance logs in one file (default), or
 		"instance", and have a log file for each started instance -->
 	<logtype>combined</logtype>
+	<!-- store datestamp and identifier for each record found -->
+	<!-- <recordlogfile>/tmp/oaiharvester-recordlog.csv</recordlogfile> -->
 	<!-- options for the curl command -->
 	<curlopts>--retry 5 --silent --limit-rate 200k --user-agent "shell-oaiharvester"</curlopts>
 	<!-- command to execute before delete -->
