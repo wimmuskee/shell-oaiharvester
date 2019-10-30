@@ -65,6 +65,9 @@
 			<xsl:when test="$data='repository_deletecmd'">
 				<xsl:value-of select="/cfg:config/cfg:repository[@id=$repository]/cfg:deletecmd"/>
 			</xsl:when>
+			<xsl:when test="$data='repository_curlopts'">
+				<xsl:value-of select="/cfg:config/cfg:repository[@id=$repository]/cfg:curlopts"/>
+			</xsl:when>
 			<xsl:when test="$data='username'">
 				<xsl:value-of select="/cfg:config/cfg:repository[@id=$repository]/cfg:username"/>
 			</xsl:when>

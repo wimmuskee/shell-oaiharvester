@@ -34,6 +34,8 @@
 		<!-- <deletecmd>updateMyDatabase.sh ${path}</deletecmd> -->
 		<!-- command to execute after update -->
 		<!-- <updatecmd>echo ${identifier} >> /tmp/harvested.txt</updatecmd> -->
+		<!-- repository curl options overrides common options -->
+		<!-- <curlopts>--limit-rate 100k</curlopts> -->
 		<!-- <username>test</username> -->
 		<!-- <password>123</password> -->
 	</repository>

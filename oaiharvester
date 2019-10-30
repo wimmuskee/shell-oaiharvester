@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-VERSION="1.3.1"
+VERSION="1.3.2"
 VERB="ListRecords"
 CONFIGFILE="/etc/shell-oaiharvester/config.xml"
 INSTALLDIR="/usr/share/shell-oaiharvester"
@@ -133,8 +133,9 @@ CONDITIONAL=$(getRepositoryConfig "conditional" ${REPOSITORY})
 REPOSITORY_RECORDPATH=$(getRepositoryConfig "repository_path" ${REPOSITORY})
 REPOSITORY_UPDATE_CMD=$(getRepositoryConfig "repository_updatecmd" ${REPOSITORY})
 REPOSITORY_DELETE_CMD=$(getRepositoryConfig "repository_deletecmd" ${REPOSITORY})
-USERNAME=$(getRepositoryConfig "username" ${REPOSITORY})
-PASSWORD=$(getRepositoryConfig "password" ${REPOSITORY})
+REPOSITORY_CURL_OPTS=$(getRepositoryConfig "repository_curlopts" ${REPOSITORY})
+REPOSITORY_USERNAME=$(getRepositoryConfig "username" ${REPOSITORY})
+REPOSITORY_PASSWORD=$(getRepositoryConfig "password" ${REPOSITORY})
 
 # checking required values
 [ -z ${BASEURL} ] && die "No baseurl found for repository: ${REPOSITORY}"
@@ -159,11 +160,16 @@ TMP=${TMP:-/tmp}
 TMP_RANDOM_PATH="shell-oaiharvester-${TMP_RANDOM}"
 TMP="${TMP}/${TMP_RANDOM_PATH}"
 REPOSITORY_RECORDPATH=${REPOSITORY_RECORDPATH:-${RECORDPATH}/${REPOSITORY}}
+LOGFILE=${LOGFILE:-/tmp/oaiharvester-log.csv}
+RECORDLOGFILE=${RECORDLOGFILE:-/dev/null}
+
+# Override common curl options if repository curl options are defined
+[ ! -z "${REPOSITORY_CURL_OPTS}" ] && CURL_OPTS="${REPOSITORY_CURL_OPTS}"
 
 # Setting credentials for curl
-CREDENTIALS=${USERNAME}
-[ ! -z ${PASSWORD} ] && CREDENTIALS="${CREDENTIALS}:${PASSWORD}"
-[ ! -z ${CREDENTIALS} ] && CURL_OPTS="${CURL_OPTS} -u ${CREDENTIALS}" 
+CREDENTIALS=${REPOSITORY_USERNAME}
+[ ! -z "${REPOSITORY_PASSWORD}" ] && CREDENTIALS="${CREDENTIALS}:${REPOSITORY_PASSWORD}"
+[ ! -z "${CREDENTIALS}" ] && CURL_OPTS="${CURL_OPTS} -u ${CREDENTIALS}" 
 
 echo "Creating temporary workdir in ${TMP}"
 mkdir -p ${TMP}
@@ -176,15 +182,11 @@ if [ "${TEST}" == "true" ]; then
 fi
 
 # setting logfile based on logtype
-LOGFILE=${LOGFILE:-/tmp/oaiharvester-log.csv}
-RECORDLOGFILE=${RECORDLOGFILE:-/dev/null}
-
-touch ${LOGFILE} 2>/dev/null || die "Logfile not writable: ${LOGFILE}"
-touch ${RECORDLOGFILE} 2>/dev/null || die "Record logfile not writable: ${RECORDLOGFILE}"
-
 if [ "${LOGTYPE}" == "instance" ]; then
 	LOGFILE="${LOGFILE}.${TMP_RANDOM}"
 fi
+touch ${LOGFILE} 2>/dev/null || die "Logfile not writable: ${LOGFILE}"
+touch ${RECORDLOGFILE} 2>/dev/null || die "Record logfile not writable: ${RECORDLOGFILE}"
 
 # Making sure the repository storage dirs exists
 if [ -d ${REPOSITORY_RECORDPATH} ]; then
