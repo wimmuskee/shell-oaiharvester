@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-VERSION="1.3.0"
+VERSION="1.3.1"
 VERB="ListRecords"
 CONFIGFILE="/etc/shell-oaiharvester/config.xml"
 INSTALLDIR="/usr/share/shell-oaiharvester"
@@ -31,8 +31,8 @@ repository you want to harvest.
 Options:
   -c, --config[=path]           Set a custom configuration file to use. By default, then
                                 one in /etc/shell-oaiharvester/config.xml is used.
+  -d, --dev                     Harvest from development source directory.
   -h, --help                    Displays the shell-oaiharvester help message.
-  -l, --libdir[=path]           Provide another library directory (for testing purposes)
   -n, --no-records              When this is set, no record content is saved, only an
                                 empty file.
   -r, --repository[=id]         Sets the repository identifier to harvest. This corresponds
@@ -76,8 +76,8 @@ if [ $(whoami) == "root" ]; then
 fi
 
 # Reading options
-if ! args=$(getopt -n "$0" -o "c:hl:nr:tvz" \
-	-l "compress,config:,help,libdir:,no-records,repository:,test,version" -- "$@")
+if ! args=$(getopt -n "$0" -o "c:dhnr:tvz" \
+	-l "compress,config:,dev,help,no-records,repository:,test,version" -- "$@")
 then
 	exit 1
 fi
@@ -85,13 +85,13 @@ eval "set -- $args"
 while true ; do
 	case "$1" in
 		--config|-c) shift; CONFIGFILE=$1 ;;
+		--dev|-d) INSTALLDIR="libs" ;;
 		--help|-h) usage; exit 0 ;;
 		--repository|-r) shift; REPOSITORY=$1 ;;
 		--no-records|-n) VERB="ListIdentifiers" ;;
 		--test|-t) TEST="true" ;;
 		--version|-v) echo "${VERSION}"; exit 0 ;;
 		--compress|-z) COMPRESS="true" ;;
-		--libdir|-l) shift; INSTALLDIR=$1 ;;
 		--) shift ; break ;;
 		*) die "$0: Internal error!" ;;
 	esac
