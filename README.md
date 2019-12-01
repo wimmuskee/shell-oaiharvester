@@ -50,6 +50,9 @@ To only retrieve identifiers:
 Not harvest, but validate the repository
 ```oaiharvester -r <repository_id> -t```
 
+To list configured repositories:
+```oaiharvester -l```
+
 ### Logs
 Unless customized, the log file of the harvest process is stored at */tmp/oaiharvester-log.csv*. The logger uses a simple csv format with a line for each downloaded page:
 ```YYYY-MM-DD HH:MM:SS,repository,record count,download time,process time```.

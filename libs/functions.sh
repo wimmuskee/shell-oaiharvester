@@ -3,7 +3,7 @@
 # Gets generic options from config file.
 function getGenericConfig {
 	local data=$1
-	echo $(xsltproc --stringparam data ${data} ${INSTALLDIR}/retrieveConfig.xsl ${CONFIGFILE})
+	echo -e $(xsltproc --stringparam data ${data} ${INSTALLDIR}/retrieveConfig.xsl ${CONFIGFILE})
 }
 
 # Gets repository specific options from config file.

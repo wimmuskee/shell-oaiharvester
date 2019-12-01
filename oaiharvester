@@ -14,11 +14,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-VERSION="1.3.3"
+VERSION="1.4.0"
 VERB="ListRecords"
 CONFIGFILE="/etc/shell-oaiharvester/config.xml"
 INSTALLDIR="/usr/share/shell-oaiharvester"
 COMPRESS="false"
+LISTREPOS="false"
 TEST="false"
 
 function usage {
@@ -33,6 +34,7 @@ Options:
                                 one in /etc/shell-oaiharvester/config.xml is used.
   -d, --dev                     Harvest from development source directory.
   -h, --help                    Displays the shell-oaiharvester help message.
+  -l, --list-repos              List all repositories in config.
   -n, --no-records              When this is set, no record content is saved, only an
                                 empty file.
   -r, --repository[=id]         Sets the repository identifier to harvest. This corresponds
@@ -76,8 +78,8 @@ if [ $(whoami) == "root" ]; then
 fi
 
 # Reading options
-if ! args=$(getopt -n "$0" -o "c:dhnr:tvz" \
-	-l "compress,config:,dev,help,no-records,repository:,test,version" -- "$@")
+if ! args=$(getopt -n "$0" -o "c:dhlnr:tvz" \
+	-l "compress,config:,dev,help,list-repos,no-records,repository:,test,version" -- "$@")
 then
 	exit 1
 fi
@@ -88,6 +90,7 @@ while true ; do
 		--dev|-d) INSTALLDIR="libs" ;;
 		--help|-h) usage; exit 0 ;;
 		--repository|-r) shift; REPOSITORY=$1 ;;
+		--list-repos|-l) LISTREPOS="true" ;;
 		--no-records|-n) VERB="ListIdentifiers" ;;
 		--test|-t) TEST="true" ;;
 		--version|-v) echo "${VERSION}"; exit 0 ;;
@@ -104,15 +107,22 @@ if [ ! -f "${INSTALLDIR}/functions.sh" ]; then
 fi
 source "${INSTALLDIR}/functions.sh"
 
+# Check config file
+if [ -z ${CONFIGFILE} ] || [ ! -f ${CONFIGFILE} ]; then
+	die "Config file not found: ${CONFIGFILE}"
+fi
+
+# Perform list repos, otherwise continue with regular harvesting
+if [ "${LISTREPOS}" == "true" ]; then
+	getGenericConfig "listrepos"
+	exit 0
+fi
+
 # Check repository id
 if [ -z ${REPOSITORY} ]; then
 	die "No repository id provided"
 fi
 
-# Check config file
-if [ -z ${CONFIGFILE} ] || [ ! -f ${CONFIGFILE} ]; then
-	die "Config file not found: ${CONFIGFILE}"
-fi
 
 # Reading oai repository info
 RECORDPATH=$(getGenericConfig "recordpath")
