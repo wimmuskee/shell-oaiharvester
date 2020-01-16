@@ -36,6 +36,17 @@ function getHttpStatus {
 	echo $(curl -I ${CURL_OPTS} -s -o /dev/null -w "%{http_code}" "${url}")
 }
 
+# conditional message or exit depending on status code
+function checkHttpStatus {
+	local code=$1
+	case ${code} in
+		"200") msg="ok" ;;
+		"405") msg="received 405, status code (HEAD) requests appear to be blocked" ;;
+		*) die "received ${code}, exiting" ;;
+	esac
+	echo "Checking status code: ${msg}"
+}
+
 # getRecords function
 function getRecords {
 	# download the oaipage
@@ -128,16 +139,10 @@ function getRecords {
 }
 
 function testRepository {
-	echo "# checking status code"
-	statuscode=$(getHttpStatus "${BASEURL}?verb=Identify")
-	if [ "${statuscode}" != "200" ]; then
-		die "received status code ${statuscode}, exiting"
-	else
-		echo "status ok"
-	fi
+	checkHttpStatus $(getHttpStatus "${BASEURL}?verb=Identify")
 
 	echo
-	echo "# Downloading pages:"
+	echo "Downloading pages:"
 	curl ${CURL_OPTS} "${BASEURL}?verb=Identify" -o "${TMP}/identify.xml"
 	curl ${CURL_OPTS} "${BASEURL}?verb=ListMetadataFormats" -o "${TMP}/listmetadataformats.xml"
 
@@ -151,8 +156,8 @@ function testRepository {
 	fi
 
 	echo
-	echo "# Validating the XML:"
-	echo "# fails without report are ignored strict wildcard errors"
+	echo "Validating the XML:"
+	echo "fails without report are ignored strict wildcard errors"
 	if [ ! -f ${TMP}/OAI-PMH.xsd ]; then
 		curl ${CURL_OPTS} --silent "http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd" -o ${TMP}/OAI-PMH.xsd
 	fi

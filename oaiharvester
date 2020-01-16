@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2012-2019 Wim Muskee <wimmuskee@gmail.com>
+# Copyright 2012-2020 Wim Muskee <wimmuskee@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-VERSION="1.4.0"
+VERSION="1.4.1"
 VERB="ListRecords"
 CONFIGFILE="/etc/shell-oaiharvester/config.xml"
 INSTALLDIR="/usr/share/shell-oaiharvester"
@@ -210,6 +210,9 @@ fi
 [ ! -z ${SET} ] && URI_SET="&set=${SET}"
 [ ! -z ${UNTIL} ] && URI_UNTIL="&until=$UNTIL"
 
+# only check status code first time calling
+checkHttpStatus $(getHttpStatus "${BASEURL}?verb=Identify")
+
 # Checks for a last harvest timestamp, and uses it
 # according to the granularity settings
 # Overwrites repository from config setting.
@@ -244,12 +247,6 @@ else
 	URL="${BASEURL}?verb=${VERB}&metadataPrefix=${PREFIX}${URI_SET}${URI_FROM}${URI_UNTIL}"
 fi
 echo "Starting harvest from: ${URL}"
-
-# only check status code first time calling
-statuscode=$(getHttpStatus ${URL})
-if [ "${statuscode}" != "200" ]; then
-	die "received status code ${statuscode}, exiting"
-fi
 
 # Now, get the initial page and the records
 # if there is a resumptionToken, retrieve other pages
