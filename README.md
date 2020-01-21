@@ -8,7 +8,7 @@ View the [CHANGELOG](CHANGELOG.md) for important changes.
  - xsltproc (libxslt)
  - bc
  - curl
- - coreutils (namely for md5sum)
+ - coreutils
 
 ### Manual Install
 Use sudo/root where needed.

@@ -69,9 +69,7 @@ function die {
 trap cleanup SIGHUP SIGINT SIGTERM
 
 # root check
-if [ $(whoami) == "root" ]; then
-	die "Don't use this tool logged in as root."
-fi
+[ $(whoami) == "root" ] && die "Don't use this tool logged in as root."
 
 # Reading options
 if ! args=$(getopt -n "$0" -o "c:dhlnr:tvz" \
@@ -98,10 +96,7 @@ while true ; do
 done
 
 # Loading functions
-if [ ! -f "${INSTALLDIR}/functions.sh" ]; then
-	die "No functions found in: ${INSTALLDIR}/functions.sh"
-fi
-source "${INSTALLDIR}/functions.sh"
+source "${INSTALLDIR}/functions.sh" 2>/dev/null || die "No functions found in: ${INSTALLDIR}/functions.sh"
 
 # Check config file
 if [ -z ${CONFIGFILE} ] || [ ! -f ${CONFIGFILE} ]; then
@@ -115,9 +110,7 @@ if [ "${LISTREPOS}" == "true" ]; then
 fi
 
 # Check repository id
-if [ -z ${REPOSITORY} ]; then
-	die "No repository id provided"
-fi
+[ -z ${REPOSITORY} ] && die "No repository id provided"
 
 
 # Reading oai repository info
@@ -163,7 +156,7 @@ CREDENTIALS=${REPOSITORY_USERNAME}
 [ ! -z "${CREDENTIALS}" ] && CURL_OPTS="${CURL_OPTS} -u ${CREDENTIALS}" 
 
 echo "Creating temporary workdir in ${TMP}"
-mkdir -p ${TMP}
+mkdir -p ${TMP} 2>/dev/null || die "Not able to create temporary workdir: ${TMP}"
 
 # Find out if we want to validate only
 # no need for logfile in this step
@@ -177,10 +170,10 @@ touch ${RECORDLOGFILE} 2>/dev/null || die "Record logfile not writable: ${RECORD
 
 # Making sure the repository storage dirs exists
 if [ -d ${REPOSITORY_RECORDPATH} ]; then
-	echo "Using repository storage in: ${REPOSITORY_RECORDPATH}"
+	echo "Using repository storage in ${REPOSITORY_RECORDPATH}"
 else
-	echo "Creating repository storage in: ${REPOSITORY_RECORDPATH}"
-	mkdir -p ${REPOSITORY_RECORDPATH}
+	echo "Creating repository storage in ${REPOSITORY_RECORDPATH}"
+	mkdir -p ${REPOSITORY_RECORDPATH} 2>/dev/null || die "Not able to create repository storage: ${REPOSITORY_RECORDPATH}"
 fi
 
 # Setting other arguments if set in config.
@@ -231,10 +224,9 @@ echo "Starting harvest with PID ${PID} from: ${URL}"
 startharvestts=$(date -u +'%FT%TZ')
 getRecords
 
+# If oai error on the first page, exit with found error.
 ERROR=$(getTargetData "error" "oaipage")
-if [ "${ERROR}" != "" ]; then
-	die ${ERROR}
-fi
+[ "${ERROR}" != "" ] && die ${ERROR}
 
 RESUMPTION=$(getTargetData "resumptiontoken" "oaipage")
 
