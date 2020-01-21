@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <config xmlns="http://github.com/wimmuskee/shell-harvester/">
 	<!-- default record save location -->
-	<recordpath>/var/shell-harvester</recordpath>
+	<recordpath>/var/db/oaiharvester</recordpath>
 	<!-- temporary files are stored here -->
-	<temppath>/tmp/shell-harvester</temppath>
+	<temppath>/tmp/oaiharvester</temppath>
 	<!-- location of log file -->
 	<logfile>/tmp/oaiharvester-log.csv</logfile>
-	<!-- type of logging:
-		"combined" putting all instance logs in one file (default), or
-		"instance", and have a log file for each started instance -->
-	<logtype>combined</logtype>
 	<!-- store datestamp and identifier for each record found -->
 	<!-- <recordlogfile>/tmp/oaiharvester-recordlog.csv</recordlogfile> -->
 	<!-- options for the curl command -->

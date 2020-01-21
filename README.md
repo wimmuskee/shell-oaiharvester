@@ -1,5 +1,6 @@
 # Shell OAI Harvester
 The OAI-PMH Shell Harvester is able to harvest OAI-PMH targets. It supports multiple configurable targets which can be updated individually. Furthermore, it is able to execute a preset command for each record it updates or deletes.
+View the [CHANGELOG](CHANGELOG.md) for important changes.
 
 ## Installation
 
@@ -7,7 +8,7 @@ The OAI-PMH Shell Harvester is able to harvest OAI-PMH targets. It supports mult
  - xsltproc (libxslt)
  - bc
  - curl
- - coreutils (namely for md5sum and shuf)
+ - coreutils (namely for md5sum)
 
 ### Manual Install
 Use sudo/root where needed.
@@ -55,9 +56,7 @@ To list configured repositories:
 
 ### Logs
 Unless customized, the log file of the harvest process is stored at */tmp/oaiharvester-log.csv*. The logger uses a simple csv format with a line for each downloaded page:
-```YYYY-MM-DD HH:MM:SS,repository,record count,download time,process time```.
-
-The logtype can be configured in the harvester config file, either "combined" putting all instance logs in one file (default), or "instance", and have a log file for each started instance 
+```YYYY-MM-DD HH:MM:SS,PID,repository,record count,download time,process time```.
 
 A recordlog can also be set, by default at */dev/null* because depending on repositories this file can increase in size a lot. This has the following format:
 ```YYYY-MM-DD HH:MM:SS,repository,record datestamp,record identifier```.

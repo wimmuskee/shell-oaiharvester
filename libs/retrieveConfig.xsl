@@ -19,9 +19,6 @@
 			<xsl:when test="$data='logfile'">
   				<xsl:value-of select="/cfg:config/cfg:logfile"/>
 			</xsl:when>
-			<xsl:when test="$data='logtype'">
-				<xsl:value-of select="/cfg:config/cfg:logtype"/>
-			</xsl:when>
 			<xsl:when test="$data='recordlogfile'">
 				<xsl:value-of select="/cfg:config/cfg:recordlogfile"/>
 			</xsl:when>
