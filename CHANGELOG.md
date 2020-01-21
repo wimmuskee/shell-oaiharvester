@@ -4,6 +4,9 @@ Notable changes will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
+### Added
+- Dependency check on bc, curl and xsltproc
+
 ### Changed
 - Logtypes are gone, the default logs are always logged combined. The harvest process PID is part of the log file.
 - The temp work dir no longer has a random part.

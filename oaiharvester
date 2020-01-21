@@ -71,6 +71,11 @@ trap cleanup SIGHUP SIGINT SIGTERM
 # root check
 [ $(whoami) == "root" ] && die "Don't use this tool logged in as root."
 
+# dependency check
+for dep in bc curl xsltproc; do
+	which ${dep} &>/dev/null || die "Dependency not found: ${dep}"
+done
+
 # Reading options
 if ! args=$(getopt -n "$0" -o "c:dhlnr:tvz" \
 	-l "compress,config:,dev,help,list-repos,no-records,repository:,test,version" -- "$@")
