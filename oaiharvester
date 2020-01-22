@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-VERSION="1.4.1"
+VERSION="2.0.0_alpha"
 VERB="ListRecords"
 CONFIGFILE="/etc/shell-oaiharvester/config.xml"
 INSTALLDIR="/usr/share/shell-oaiharvester"
@@ -72,7 +72,7 @@ trap cleanup SIGHUP SIGINT SIGTERM
 [ $(whoami) == "root" ] && die "Don't use this tool logged in as root."
 
 # dependency check
-for dep in bc curl xsltproc; do
+for dep in bc curl grep xsltproc; do
 	which ${dep} &>/dev/null || die "Dependency not found: ${dep}"
 done
 
@@ -144,11 +144,16 @@ REPOSITORY_PASSWORD=$(getRepositoryConfig "password" ${REPOSITORY})
 [ -z ${BASEURL} ] && die "No baseurl found for repository: ${REPOSITORY}"
 [ -z ${PREFIX} ] && die "No prefix found for repository: ${REPOSITORY}"
 
+# Setting other arguments if set in config.
+[ ! -z ${SET} ] && URI_SET="&set=${SET}"
+[ ! -z ${UNTIL} ] && URI_UNTIL="&until=$UNTIL"
+
 # Set some sane defaults
 # all workfiles go into a random tmp directory
 RECORDPATH=${RECORDPATH:-/tmp}
 TMP=${TMP:-/tmp/oaiharvester}
 REPOSITORY_RECORDPATH=${REPOSITORY_RECORDPATH:-${RECORDPATH}/${REPOSITORY}}
+REPOSITORY_STATUSFILE="${REPOSITORY_RECORDPATH}/.oaiharvester"
 LOGFILE=${LOGFILE:-/tmp/oaiharvester-log.csv}
 RECORDLOGFILE=${RECORDLOGFILE:-/dev/null}
 
@@ -181,28 +186,37 @@ else
 	mkdir -p ${REPOSITORY_RECORDPATH} 2>/dev/null || die "Not able to create repository storage: ${REPOSITORY_RECORDPATH}"
 fi
 
-# Setting other arguments if set in config.
-[ ! -z ${SET} ] && URI_SET="&set=${SET}"
-[ ! -z ${UNTIL} ] && URI_UNTIL="&until=$UNTIL"
+# Try to load repository status
+if [ -f ${REPOSITORY_STATUSFILE} ]; then
+	source "${REPOSITORY_RECORDPATH}/.oaiharvester"
+else
+	# if not there, either new, or pre-2.0.0
+	if [ -f "${REPOSITORY_RECORDPATH}/lasttimestamp.txt" ]; then
+		REPOSITORY_MAJORVER=1
+		LASTTIMESTAMP=$(cat "${REPOSITORY_RECORDPATH}/lasttimestamp.txt")
+	fi
+fi
+
 
 # only check status code first time calling
 checkHttpStatus $(getHttpStatus "${BASEURL}?verb=Identify")
 
+# and retrieve Identify for granularity and optional firsttimestamp
+curl ${CURL_OPTS} "${BASEURL}?verb=Identify" -o ${TMP}/identify.xml
+
 # Checks for a last harvest timestamp, and uses it
 # according to the granularity settings
-# Overwrites repository from config setting.
-curl ${CURL_OPTS} "${BASEURL}?verb=Identify" -o ${TMP}/identify.xml
-repository_timestamp="${REPOSITORY_RECORDPATH}/lasttimestamp.txt"
-if [ -f ${repository_timestamp} ]; then
+# Overwrites repository FROM config setting.
+if [ ! -z ${LASTTIMESTAMP} ]; then
+	# check valid timestamp
+	if [[ "$(echo ${LASTTIMESTAMP} | grep '^[0-9]\{4\}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-5][0-9]:[0-5][0-9]Z$')" == "" ]]; then
+		die "Invalid timestamp set"
+	fi
+
 	# check out identify for datetime granularity
 	granularity=$(getTargetData "granularity" "identify")
-
-	if [ "${granularity}" == "YYYY-MM-DDThh:mm:ssZ" ]; then
-		timestamp=$(cat ${repository_timestamp})
-	else
-		timestamp=$(cat ${repository_timestamp} | cut -d "T" -f 1)
-	fi
-	URI_FROM="&from=${timestamp}"
+	[[ "${granularity}" == "YYYY-MM-DD" ]] && LASTTIMESTAMP=${LASTTIMESTAMP:0:10}
+	URI_FROM="&from=${LASTTIMESTAMP}"
 else
 	# in case of first harvest, use the Identify earliestDatestamp
 	# assuming the Identify earliestDatestamp conforms to the repo's granularity
@@ -242,7 +256,9 @@ while [ "${RESUMPTION}" != "" ]; do
 	RESUMPTION=$(getTargetData "resumptiontoken" "oaipage")
 done
 
-# When finished, save startharvest timestamp
-echo ${startharvestts} > ${repository_timestamp}
+# When finished, save status
+echo "LASTTIMESTAMP=$startharvestts" > ${REPOSITORY_STATUSFILE}
+echo "REPO_VER=$VERSION" >> ${REPOSITORY_STATUSFILE}
+echo "REPO_MAJORVER=$(echo $VERSION | cut -d "." -f 1)" >> ${REPOSITORY_STATUSFILE}
 
 cleanup 0

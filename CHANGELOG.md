@@ -6,10 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- Dependency check on bc, curl and xsltproc
+- Dependency check on bc, curl, grep and xsltproc
 
 ### Changed
 - The temp work dir no longer has a random part.
+- The lasttimestamp.txt has been changed to a hidden .oaiharvester file which can contain other repository status information. It will still use the old file if the new one is not present.
 
 ### Removed
 - Distinction between instance and combined logtypes. This log cannot be set to instanced anymore. Instead the harvest process PID is part of the log file.

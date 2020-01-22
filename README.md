@@ -9,6 +9,7 @@ View the [CHANGELOG](CHANGELOG.md) for important changes.
  - bc
  - curl
  - coreutils
+ - grep
 
 ### Manual Install
 Use sudo/root where needed.
