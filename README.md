@@ -61,3 +61,7 @@ Unless customized, the log file of the harvest process is stored at */tmp/oaihar
 
 A recordlog can also be set, by default at */dev/null* because depending on repositories this file can increase in size a lot. This has the following format:
 ```YYYY-MM-DD HH:MM:SS,repository,record datestamp,record identifier```.
+
+### Status
+Once harvested, each repository directory will hold a status file. In version 1, this is *lasttimestamp.txt* containing just the timestamp where the harvester should continue.
+Starting from version 2, a hidden *.oaiharvester* file is used to contain not only the timestamp, but also harvester version information which should help with future migrations.
