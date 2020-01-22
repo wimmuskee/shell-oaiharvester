@@ -200,7 +200,7 @@ if [ -f ${repository_timestamp} ]; then
 	if [ "${granularity}" == "YYYY-MM-DDThh:mm:ssZ" ]; then
 		timestamp=$(cat ${repository_timestamp})
 	else
-		timestamp=$(cat ${repository_timestamp} | awk -F "T" '{print $1}')
+		timestamp=$(cat ${repository_timestamp} | cut -d "T" -f 1)
 	fi
 	URI_FROM="&from=${timestamp}"
 else

@@ -1,15 +1,19 @@
 # Changelog
 Notable changes will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 ### Added
 - Dependency check on bc, curl and xsltproc
 
 ### Changed
-- Logtypes are gone, the default logs are always logged combined. The harvest process PID is part of the log file.
 - The temp work dir no longer has a random part.
+
+### Removed
+- Distinction between instance and combined logtypes. This log cannot be set to instanced anymore. Instead the harvest process PID is part of the log file.
+- Dependency on awk.
 
 ## [1.4.1]
 ### Fixed
