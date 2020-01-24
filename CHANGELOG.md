@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - The temp work dir no longer has a random part.
 - The lasttimestamp.txt has been changed to a hidden .oaiharvester file which can contain other repository status information. It will still use the old file if the new one is not present.
+- The repository storage subdir generation is now based on md5sum of identifier without the newline.
 
 ### Removed
 - Distinction between instance and combined logtypes. This log cannot be set to instanced anymore. Instead the harvest process PID is part of the log file.
