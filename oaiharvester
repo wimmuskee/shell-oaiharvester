@@ -38,6 +38,7 @@ Options:
   -l, --list-repos              List all repositories in config.
   -n, --no-records              When this is set, no record content is saved, only an
                                 empty file.
+  -m, --migrate                 Migrate repository records in recordpath to version 2.0.0 dirs.
   -r, --repository[=id]         Sets the repository identifier to harvest. This corresponds
                                 with the identifier in the config file.
   -t, --test                    Do not harvest, but test if the repository validates.
@@ -77,8 +78,8 @@ for dep in bc curl grep xsltproc; do
 done
 
 # Reading options
-if ! args=$(getopt -n "$0" -o "c:dhlnr:tvz" \
-	-l "compress,config:,dev,help,list-repos,no-records,repository:,test,version" -- "$@")
+if ! args=$(getopt -n "$0" -o "c:dhlmnr:tvz" \
+	-l "compress,config:,dev,help,list-repos,migrate,no-records,repository:,test,version" -- "$@")
 then
 	exit 1
 fi
@@ -90,6 +91,7 @@ while true ; do
 		--help|-h) usage; exit 0 ;;
 		--repository|-r) shift; REPOSITORY=$1 ;;
 		--list-repos|-l) LISTREPOS="true" ;;
+		--migrate|-m) MIGRATE="true" ;;
 		--no-records|-n) VERB="ListIdentifiers" ;;
 		--test|-t) TEST="true" ;;
 		--version|-v) echo "${VERSION}"; exit 0 ;;
@@ -175,6 +177,12 @@ if [ "${TEST}" == "true" ]; then
 	exit 0
 fi
 
+if [ "${MIGRATE}" == "true" ]; then
+	source "${INSTALLDIR}/migrations.sh"
+	rearrangeRecordsDataSubdirs ${REPOSITORY_RECORDPATH}
+	exit 0
+fi
+
 touch ${LOGFILE} 2>/dev/null || die "Logfile not writable: ${LOGFILE}"
 touch ${RECORDLOGFILE} 2>/dev/null || die "Record logfile not writable: ${RECORDLOGFILE}"
 
@@ -197,6 +205,10 @@ else
 	fi
 fi
 
+# Check if we use a pre-2.0.0 repository format
+if [[ ! -z ${LASTTIMESTAMP} && ( ${REPOSITORY_MAJORVER} -eq 1 || "${REPO_VER}" == "2.0.0_alpha" ) ]]; then
+	die "The repository format has been updated. You need to perform a migration before continuing."
+fi
 
 # only check status code first time calling
 checkHttpStatus $(getHttpStatus "${BASEURL}?verb=Identify")
