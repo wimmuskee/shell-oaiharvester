@@ -23,7 +23,7 @@ function assertFileExists {
 		echo "# ${test}: SUCCESS"
 	else
 		echo "# ${test}: FAILED"
-		echo "expected: {filepath} does not exist"
+		echo "expected: ${filepath} does not exist"
 	fi
 }
 
@@ -35,6 +35,6 @@ function assertFileNotExists {
 		echo "# ${test}: SUCCESS"
 	else
 		echo "# ${test}: FAILED"
-		echo "expected: {filepath} does exist"
+		echo "expected: ${filepath} does exist"
 	fi
 }

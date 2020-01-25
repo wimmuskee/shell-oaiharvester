@@ -6,6 +6,7 @@
 # all records in the provided path to the new subdirs.
 function rearrangeRecordsDataSubdirs {
 	local recordpath=${1%/}
+	local repostatuspath="${recordpath}/.oaiharvester"
 
 	if [ ! -d ${recordpath} ]; then
 		echo "repository path ${recordpath} does not exist, there is nothing to migrate, exiting" && exit 0
@@ -29,4 +30,14 @@ function rearrangeRecordsDataSubdirs {
 			mv ${path} ${new_path}
 		fi
 	done
+
+	if [ -f ${repostatuspath} ]; then
+		source ${repostatuspath}
+		setRepositoryStatus "${repostatuspath}" "${LASTTIMESTAMP}" "2.0.0_pre"
+	elif [ -f "${recordpath}/lasttimestamp.txt" ]; then
+		LASTTIMESTAMP=$(cat "${recordpath}/lasttimestamp.txt")
+		setRepositoryStatus "${repostatuspath}" "${LASTTIMESTAMP}" "2.0.0_pre"
+	fi
+
+	rm -f "${recordpath}/lasttimestamp.txt"
 }

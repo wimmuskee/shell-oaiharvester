@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Dependency check on bc, curl, grep and xsltproc
+- Migration script to move from old subdirs to new subdir (see also Changed).
+- Migrations tests, easily extendable.
 
 ### Changed
 - The temp work dir no longer has a random part.

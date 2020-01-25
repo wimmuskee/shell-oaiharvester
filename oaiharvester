@@ -14,12 +14,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-VERSION="2.0.0_alpha"
+VERSION="2.0.0_pre"
 VERB="ListRecords"
 CONFIGFILE="/etc/shell-oaiharvester/config.xml"
 INSTALLDIR="/usr/share/shell-oaiharvester"
 COMPRESS="false"
 LISTREPOS="false"
+MIGRATE="false"
 TEST="false"
 PID="$$"
 
@@ -103,7 +104,8 @@ while true ; do
 done
 
 # Loading functions
-source "${INSTALLDIR}/functions.sh" 2>/dev/null || die "No functions found in: ${INSTALLDIR}/functions.sh"
+source "${INSTALLDIR}/common.sh" 2>/dev/null || die "Function library not found: ${INSTALLDIR}/functions.sh"
+source "${INSTALLDIR}/functions.sh" 2>/dev/null || die "Function library not found: ${INSTALLDIR}/functions.sh"
 
 # Check config file
 if [ -z ${CONFIGFILE} ] || [ ! -f ${CONFIGFILE} ]; then
@@ -269,8 +271,6 @@ while [ "${RESUMPTION}" != "" ]; do
 done
 
 # When finished, save status
-echo "LASTTIMESTAMP=$startharvestts" > ${REPOSITORY_STATUSFILE}
-echo "REPO_VER=$VERSION" >> ${REPOSITORY_STATUSFILE}
-echo "REPO_MAJORVER=$(echo $VERSION | cut -d "." -f 1)" >> ${REPOSITORY_STATUSFILE}
+setRepositoryStatus "${REPOSITORY_STATUSFILE}" "${startharvestts}" "$VERSION"
 
 cleanup 0
