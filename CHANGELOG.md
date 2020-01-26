@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dependency check on bc, curl, grep and xsltproc
 - Migration script to move from old subdirs to new subdir (see also Changed).
 - Migrations tests, easily extendable.
+- Support for local config in *$HOME/.config/shell-oaiharvester/config.xml*.
 
 ### Changed
 - The temp work dir no longer has a random part.

@@ -27,6 +27,11 @@ MIGRATE="false"
 TEST="false"
 PID="$$"
 
+# Override CONFIGFILE if local one is found
+if [ -f "${HOME}/.config/shell-oaiharvester/config.xml" ]; then
+	CONFIGFILE="${HOME}/.config/shell-oaiharvester/config.xml"
+fi
+
 function usage {
 cat <<EOF
 Usage: $0 [OPTION]

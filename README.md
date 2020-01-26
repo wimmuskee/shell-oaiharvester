@@ -25,8 +25,10 @@ Use sudo/root where needed.
 
 ### Configuration
 The harvester has several configuration options that apply to the general behaviour while other options are repository specific.
-By default, the example file in */etc/shell-oaiprovider* is used. You can use an other by calling:
-`oaiharvester -c <config file>`
+Different config files can be used with different levels of precedence (without fallback).
+1. commandline option provided location: `oaiharvester -c <config file>`
+2. *$HOME/.config/shell-oaiharvester/config.xml*
+3. */etc/shell-oaiharvester/config.xml*
 
 Some notes on the options:
  - deletecmd: executed before a record is deleted, optional
