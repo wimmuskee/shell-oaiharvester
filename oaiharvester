@@ -186,7 +186,7 @@ fi
 
 if [ "${MIGRATE}" == "true" ]; then
 	source "${INSTALLDIR}/migrations.sh"
-	echo "Starting record subdir migration in ${recordpath}"
+	echo "Starting record subdir migration in ${REPOSITORY_RECORDPATH}"
 	rearrangeRecordsDataSubdirs ${REPOSITORY_RECORDPATH}
 	exit 0
 fi
