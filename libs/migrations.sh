@@ -8,6 +8,8 @@ function rearrangeRecordsDataSubdirs {
 	local recordpath=${1%/}
 	local repostatuspath="${recordpath}/.oaiharvester"
 
+	echo "Starting record subdir migration in ${recordpath}"
+
 	if [ ! -d ${recordpath} ]; then
 		echo "repository path ${recordpath} does not exist, there is nothing to migrate, exiting" && exit 0
 	fi
