@@ -12,6 +12,7 @@ function assertEqual {
 		echo "# ${test}: FAILED"
 		echo "result: ${result}"
 		echo "expected: ${expected}"
+		echo "1" > "testresult"
 	fi
 }
 
@@ -24,6 +25,7 @@ function assertFileExists {
 	else
 		echo "# ${test}: FAILED"
 		echo "expected: ${filepath} does not exist"
+		echo "1" > "testresult"
 	fi
 }
 
@@ -36,5 +38,6 @@ function assertFileNotExists {
 	else
 		echo "# ${test}: FAILED"
 		echo "expected: ${filepath} does exist"
+		echo "1" > "testresult"
 	fi
 }
