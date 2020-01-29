@@ -3,6 +3,7 @@
 
 cd test
 echo "0" > testresult
+./test_functions.sh
 ./test_migrations.sh
 
 testresult=$(cat testresult)
