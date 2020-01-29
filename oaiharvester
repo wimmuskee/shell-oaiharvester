@@ -61,10 +61,10 @@ function cleanup {
 
 	if [ ! -z ${TMP} ]; then
 		if [ "${arg}" == 0 ]; then
-			echo "Removing temporary workfiles"
-			#rm -rf ${TMP}
+			notice "Removing temporary workfiles"
+			rm -rf ${TMP}
 		else
-			echo "Maybe you want to see or delete the temporary workfiles in ${TMP}"
+			notice "Maybe you want to see or delete the temporary workfiles in ${TMP}"
 		fi
 	fi
 
@@ -175,7 +175,7 @@ CREDENTIALS=${REPOSITORY_USERNAME}
 [ ! -z "${REPOSITORY_PASSWORD}" ] && CREDENTIALS="${CREDENTIALS}:${REPOSITORY_PASSWORD}"
 [ ! -z "${CREDENTIALS}" ] && CURL_OPTS="${CURL_OPTS} -u ${CREDENTIALS}" 
 
-echo "Creating temporary workdir in ${TMP}"
+notice "Creating temporary workdir in ${TMP}"
 mkdir -p ${TMP} 2>/dev/null || die "Not able to create temporary workdir: ${TMP}"
 
 # Find out if we want to validate only
@@ -187,7 +187,7 @@ fi
 
 if [ "${MIGRATE}" == "true" ]; then
 	source "${INSTALLDIR}/migrations.sh"
-	echo "Starting record subdir migration in ${REPOSITORY_RECORDPATH}"
+	notice "Starting record subdir migration in ${REPOSITORY_RECORDPATH}"
 	rearrangeRecordsDataSubdirs ${REPOSITORY_RECORDPATH}
 	exit 0
 fi
@@ -197,9 +197,9 @@ touch ${RECORDLOGFILE} 2>/dev/null || die "Record logfile not writable: ${RECORD
 
 # Making sure the repository storage dirs exists
 if [ -d ${REPOSITORY_RECORDPATH} ]; then
-	echo "Using repository storage in ${REPOSITORY_RECORDPATH}"
+	notice "Using repository storage in ${REPOSITORY_RECORDPATH}"
 else
-	echo "Creating repository storage in ${REPOSITORY_RECORDPATH}"
+	notice "Creating repository storage in ${REPOSITORY_RECORDPATH}"
 	mkdir -p ${REPOSITORY_RECORDPATH} 2>/dev/null || die "Not able to create repository storage: ${REPOSITORY_RECORDPATH}"
 fi
 
@@ -256,7 +256,7 @@ if [ "${RESUMPTION}" != "" ]; then
 else
 	URL="${BASEURL}?verb=${VERB}&metadataPrefix=${PREFIX}${URI_SET}${URI_FROM}${URI_UNTIL}"
 fi
-echo "Starting harvest with PID ${PID} from: ${URL}"
+notice "Starting harvest with PID ${PID} from: ${URL}"
 
 # Now, get the initial page and the records
 # if there is a resumptionToken, retrieve other pages

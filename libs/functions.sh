@@ -44,14 +44,14 @@ function checkHttpStatus {
 		"405") msg="received 405, status code (HEAD) requests appear to be blocked" ;;
 		*) die "received ${code}, exiting" ;;
 	esac
-	echo "Checking status code: ${msg}"
+	notice "Checking status code: ${msg}"
 }
 
 # getRecords function
 function getRecords {
 	# download the oaipage
 	local starttime=$(date +%s%N | cut -b1-13)
-	rm ${TMP}/oaipage.xml
+	rm -f ${TMP}/oaipage.xml
 	curl ${CURL_OPTS} ${URL} -o ${TMP}/oaipage.xml
 	local endtime=$(date +%s%N | cut -b1-13)
 	local downloadtime=$(echo "scale=3; ($endtime - $starttime)/1000" | bc)

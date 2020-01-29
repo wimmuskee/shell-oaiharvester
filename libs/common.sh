@@ -1,5 +1,10 @@
 # Common functions used in main harvesting functions and migrations for the oai-harvester.
 
+function notice {
+	local msg=$1
+	echo ${msg}
+}
+
 # Store status info in .oaihavester file.
 function setRepositoryStatus {
 	local statusfile=$1
