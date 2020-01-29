@@ -51,6 +51,7 @@ function checkHttpStatus {
 function getRecords {
 	# download the oaipage
 	local starttime=$(date +%s%N | cut -b1-13)
+	rm ${TMP}/oaipage.xml
 	curl ${CURL_OPTS} ${URL} -o ${TMP}/oaipage.xml
 	local endtime=$(date +%s%N | cut -b1-13)
 	local downloadtime=$(echo "scale=3; ($endtime - $starttime)/1000" | bc)

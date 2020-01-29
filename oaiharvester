@@ -62,7 +62,7 @@ function cleanup {
 	if [ ! -z ${TMP} ]; then
 		if [ "${arg}" == 0 ]; then
 			echo "Removing temporary workfiles"
-			rm -rf ${TMP}
+			#rm -rf ${TMP}
 		else
 			echo "Maybe you want to see or delete the temporary workfiles in ${TMP}"
 		fi
@@ -161,6 +161,7 @@ REPOSITORY_PASSWORD=$(getRepositoryConfig "password" ${REPOSITORY})
 # all workfiles go into a random tmp directory
 RECORDPATH=${RECORDPATH:-/tmp}
 TMP=${TMP:-/tmp/oaiharvester}
+TMP="${TMP}/${PID}"
 REPOSITORY_RECORDPATH=${REPOSITORY_RECORDPATH:-${RECORDPATH}/${REPOSITORY}}
 REPOSITORY_STATUSFILE="${REPOSITORY_RECORDPATH}/.oaiharvester"
 LOGFILE=${LOGFILE:-/tmp/oaiharvester-log.csv}
