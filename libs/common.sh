@@ -2,7 +2,7 @@
 
 function notice {
 	local msg=$1
-	echo ${msg}
+	[[ "${QUIET}" != "true" ]] && echo ${msg}
 }
 
 # Store status info in .oaihavester file.

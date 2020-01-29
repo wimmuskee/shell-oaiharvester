@@ -4,6 +4,13 @@ Notable changes will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [UNRELEASED]
+### Added
+- Commandline option to suppress notices.
+
+### Changed
+- Temporary working files will always be stored in PID subdirectory of configured temp path.
+
 ## [2.0.0]
 ### Added
 - Dependency check on bc, curl, grep and xsltproc
