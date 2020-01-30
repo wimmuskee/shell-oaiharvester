@@ -40,8 +40,9 @@ Harvest an OAI-PMH target that is configured. Use the configuration file to conf
 repository you want to harvest.
 
 Options:
-  -c, --config[=path]           Set a custom configuration file to use. By default, then
-                                one in /etc/shell-oaiharvester/config.xml is used.
+  -c, --config[=path]           Set a custom configuration file to use. By default, the one
+                                in $HOME/.config/shell-oaiharvester/config.xml (if present)
+                                or /etc/shell-oaiharvester/config.xml is used.
   -d, --dev                     Harvest from development source directory.
   -h, --help                    Displays the shell-oaiharvester help message.
   -l, --list-repos              List all repositories in config.
