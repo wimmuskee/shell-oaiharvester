@@ -33,7 +33,8 @@ function checkValidXml {
 # returns http status code
 function getHttpStatus {
 	local url=$1
-	echo $(curl -I ${CURL_OPTS} -s -o /dev/null -w "%{http_code}" "${url}")
+	cmd="curl -i ${CURL_OPTS} -s -o /dev/null -w \"%{http_code}\" \"${url}\""
+	echo $(eval ${cmd})
 }
 
 # conditional message or exit depending on status code
@@ -47,12 +48,20 @@ function checkHttpStatus {
 	notice "Checking status code: ${msg}"
 }
 
+# download url to destination file
+function fetchUrl {
+	local url=$1
+	local dest=$2
+	local cmd="curl ${CURL_OPTS} \"${url}\" -o ${dest}"
+	rm -f ${dest}
+	eval ${cmd}
+}
+
 # getRecords function
 function getRecords {
 	# download the oaipage
 	local starttime=$(date +%s%N | cut -b1-13)
-	rm -f ${TMP}/oaipage.xml
-	curl ${CURL_OPTS} ${URL} -o ${TMP}/oaipage.xml
+	fetchUrl ${URL} "${TMP}/oaipage.xml"
 	local endtime=$(date +%s%N | cut -b1-13)
 	local downloadtime=$(echo "scale=3; ($endtime - $starttime)/1000" | bc)
 
@@ -144,23 +153,23 @@ function testRepository {
 
 	echo
 	echo "Downloading pages:"
-	curl ${CURL_OPTS} "${BASEURL}?verb=Identify" -o "${TMP}/identify.xml"
-	curl ${CURL_OPTS} "${BASEURL}?verb=ListMetadataFormats" -o "${TMP}/listmetadataformats.xml"
+	fetchUrl "${BASEURL}?verb=Identify" "${TMP}/identify.xml"
+	fetchUrl "${BASEURL}?verb=ListMetadataFormats" "${TMP}/listmetadataformats.xml"
 
 	if [ -z ${SET} ]; then
-		curl ${CURL_OPTS} "${BASEURL}?verb=ListRecords&metadataPrefix=${PREFIX}" -o "${TMP}/listrecords.xml"
-		curl ${CURL_OPTS} "${BASEURL}?verb=ListIdentifiers&metadataPrefix=${PREFIX}" -o "${TMP}/listidentifiers.xml"
+		fetchUrl "${BASEURL}?verb=ListRecords&metadataPrefix=${PREFIX}" "${TMP}/listrecords.xml"
+		fetchUrl "${BASEURL}?verb=ListIdentifiers&metadataPrefix=${PREFIX}" "${TMP}/listidentifiers.xml"
 	else
-		curl ${CURL_OPTS} "${BASEURL}?verb=ListSets" -o "${TMP}/listsets.xml"
-		curl ${CURL_OPTS} "${BASEURL}?verb=ListRecords&metadataPrefix=${PREFIX}&set=${SET}" -o "${TMP}/listrecords.xml"
-		curl ${CURL_OPTS} "${BASEURL}?verb=ListIdentifiers&metadataPrefix=${PREFIX}&set=${SET}" -o "${TMP}/listidentifiers.xml"
+		fetchUrl "${BASEURL}?verb=ListSets" "${TMP}/listsets.xml"
+		fetchUrl "${BASEURL}?verb=ListRecords&metadataPrefix=${PREFIX}&set=${SET}" "${TMP}/listrecords.xml"
+		fetchUrl "${BASEURL}?verb=ListIdentifiers&metadataPrefix=${PREFIX}&set=${SET}" "${TMP}/listidentifiers.xml"
 	fi
 
 	echo
 	echo "Validating the XML:"
 	echo "fails without report are ignored strict wildcard errors"
 	if [ ! -f ${TMP}/OAI-PMH.xsd ]; then
-		curl ${CURL_OPTS} --silent "http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd" -o ${TMP}/OAI-PMH.xsd
+		curl --silent "http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd" -o ${TMP}/OAI-PMH.xsd
 	fi
 
 	# solve strict error message with:

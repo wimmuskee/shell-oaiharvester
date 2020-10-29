@@ -226,7 +226,7 @@ fi
 checkHttpStatus $(getHttpStatus "${BASEURL}?verb=Identify")
 
 # and retrieve Identify for granularity and optional firsttimestamp
-curl ${CURL_OPTS} "${BASEURL}?verb=Identify" -o ${TMP}/identify.xml
+fetchUrl "${BASEURL}?verb=Identify" "${TMP}/identify.xml"
 
 # Checks for a last harvest timestamp, and uses it
 # according to the granularity settings
