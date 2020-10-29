@@ -42,7 +42,6 @@ function checkHttpStatus {
 	local code=$1
 	case ${code} in
 		"200") msg="ok" ;;
-		"405") msg="received 405, status code (HEAD) requests appear to be blocked" ;;
 		*) die "received ${code}, exiting" ;;
 	esac
 	notice "Checking status code: ${msg}"
