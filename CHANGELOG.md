@@ -4,6 +4,14 @@ Notable changes will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.1]
+### Fixed
+- Status check is no longer performed using HEAD request.
+- Curl commands are executed in eval, fixing bug with curlopts headers using spaces.
+
+### Deprecated
+- The compression option will be removed in 2021. It is more useful to compress the whole repository, but should happen outside the scope of this code.
+
 ## [2.1.0]
 ### Added
 - Commandline option to suppress notices.
