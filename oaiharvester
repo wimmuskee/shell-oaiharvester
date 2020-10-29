@@ -99,7 +99,7 @@ while true ; do
 		--no-records|-n) VERB="ListIdentifiers" ;;
 		--test|-t) TEST="true" ;;
 		--version|-v) echo "${VERSION}"; exit 0 ;;
-		--compress|-z) COMPRESS="true" ;;
+		--compress|-z) echo "DEPRECATED: compression" && COMPRESS="true" ;;
 		--) shift ; break ;;
 		*) die "$0: Internal error!" ;;
 	esac
