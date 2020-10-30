@@ -54,7 +54,7 @@ Options:
                                 with the identifier in the config file.
   -t, --test                    Do not harvest, but test if the repository validates.
   -v, --version                 Displays the shell-oaiharvester version.
-  -z, --compress                Compress stored records with xz.
+  -z, --compress                Compress stored records with xz (DEPRECATED).
 EOF
 }
 

@@ -3,6 +3,7 @@
 
 cd test
 echo "0" > testresult
+./test_command.sh
 ./test_functions.sh
 ./test_migrations.sh
 

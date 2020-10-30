@@ -41,3 +41,17 @@ function assertFileNotExists {
 		echo "1" > "testresult"
 	fi
 }
+
+function assertPattern {
+	local test=$1
+	local result=$2
+	local pattern=$3
+
+	if [[ "$(echo ${result} | grep ${pattern})" != "" ]]; then
+		echo "# ${test}: SUCCESS"
+	else
+		echo "# ${test}: FAILED"
+		echo "expected: ${test} does not match ${pattern}"
+		echo "1" > "testresult"
+	fi
+}
