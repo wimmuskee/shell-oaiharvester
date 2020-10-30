@@ -81,14 +81,8 @@ function die {
 trap cleanup SIGHUP SIGINT SIGTERM
 
 # Reading options
-if ! args=$(getopt -n "$0" -o "c:dhlmqnr:tvz" \
-	-l "compress,config:,dev,help,list-repos,migrate,quiet,no-records,repository:,test,version" -- "$@")
-then
-	exit 1
-fi
-eval "set -- $args"
-while true ; do
-	case "$1" in
+while [[ "$#" -gt 0 ]]; do
+	case $1 in
 		--config|-c) shift; CONFIGFILE=$1 ;;
 		--dev|-d) INSTALLDIR="libs" ;;
 		--help|-h) usage; exit 0 ;;
@@ -100,8 +94,7 @@ while true ; do
 		--test|-t) TEST="true" ;;
 		--version|-v) echo "${VERSION}"; exit 0 ;;
 		--compress|-z) echo "DEPRECATED: compression" && COMPRESS="true" ;;
-		--) shift ; break ;;
-		*) die "$0: Internal error!" ;;
+		*) die "$0: Unknown command input" ;;
 	esac
 	shift
 done
