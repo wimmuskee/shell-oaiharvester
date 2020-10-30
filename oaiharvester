@@ -104,13 +104,6 @@ for dep in bc curl grep xsltproc; do
 	which ${dep} &>/dev/null || die "Dependency not found: ${dep}"
 done
 
-# optional dependency
-which xmllint &>/dev/null
-if [ $? -eq 1 ]; then
-	echo "Dependency not found: xmllint, testing not available"
-	TEST="false"
-fi
-
 # Loading functions
 source "${INSTALLDIR}/common.sh" 2>/dev/null || die "Function library not found: ${INSTALLDIR}/functions.sh"
 source "${INSTALLDIR}/functions.sh" 2>/dev/null || die "Function library not found: ${INSTALLDIR}/functions.sh"
