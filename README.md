@@ -5,11 +5,13 @@ View the [CHANGELOG](CHANGELOG.md) for important changes.
 ## Installation
 
 ### Dependencies
- - xsltproc (libxslt)
+ - bash
  - bc
  - curl
  - coreutils
  - grep
+ - xmllint (optional for validating responses)
+ - xsltproc (libxslt)
 
 ### Manual Install
 Use sudo/root where needed.

@@ -19,7 +19,7 @@ function testNoArgs {
 }
 
 function testWrongArg {
-	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/1" "$(./oaiharvester -x 2>&1)" "Error: ./oaiharvester: Unknown command parameter"
+	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/1" "$(./oaiharvester -x 2>&1)" "Error: ./oaiharvester: Unknown command input"
 }
 
 # call the functions
