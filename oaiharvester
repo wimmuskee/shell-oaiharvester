@@ -17,7 +17,7 @@
 # root check
 [ $(whoami) == "root" ] && echo "Don't use this tool logged in as root." && exit 1
 
-VERSION="2.1.2"
+VERSION="2.2.0"
 VERB="ListRecords"
 CONFIGFILE="/etc/shell-oaiharvester/config.xml"
 INSTALLDIR="/usr/share/shell-oaiharvester"
@@ -54,7 +54,6 @@ Options:
                                 with the identifier in the config file.
   -t, --test                    Do not harvest, but test if the repository validates.
   -v, --version                 Displays the shell-oaiharvester version.
-  -z, --compress                Compress stored records with xz (DEPRECATED).
 EOF
 }
 
@@ -93,7 +92,6 @@ while [[ "$#" -gt 0 ]]; do
 		--no-records|-n) VERB="ListIdentifiers" ;;
 		--test|-t) TEST="true" ;;
 		--version|-v) echo "${VERSION}"; exit 0 ;;
-		--compress|-z) echo "DEPRECATED: compression" && COMPRESS="true" ;;
 		*) die "$0: Unknown command input" ;;
 	esac
 	shift

@@ -78,7 +78,6 @@ function getRecords {
 		local identifier=$(xsltproc --stringparam data identifier --param record_nr ${count} ${INSTALLDIR}/retrieveData.xsl ${TMP}/oaipage.xml | sed s/\\//\%2F/g | sed s/\&/\%26/g | sed s/\ /\%20/g)
 		local datestamp=$(xsltproc --stringparam data datestamp --param record_nr ${count} ${INSTALLDIR}/retrieveData.xsl ${TMP}/oaipage.xml)
 		local filename="${identifier}"
-		[ "${COMPRESS}" == "true" ] && filename="${filename}.xz"
 		local storedir=$(echo -n "${identifier}" | md5sum | head -c 2)
 		local path="${REPOSITORY_RECORDPATH}/${storedir}/${filename}"
 
@@ -113,13 +112,7 @@ function getRecords {
 			# store record if it passed the conditional test
 			if [ -f ${TMP}/passed-conditional.xml ]; then
 				mkdir -p "${REPOSITORY_RECORDPATH}/${storedir}"
-
-				if [ "${COMPRESS}" == "false" ]; then
-					mv ${TMP}/passed-conditional.xml "${path}"
-				elif [ "${COMPRESS}" == "true" ]; then
-					 xz -c ${TMP}/passed-conditional.xml > "${path}"
-					 rm ${TMP}/passed-conditional.xml
-				fi
+				mv ${TMP}/passed-conditional.xml "${path}"
 
 				if [ ! -z "${REPOSITORY_UPDATE_CMD}" ]; then
 					eval ${REPOSITORY_UPDATE_CMD}
