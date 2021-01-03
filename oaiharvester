@@ -98,7 +98,7 @@ while [[ "$#" -gt 0 ]]; do
 done
 
 # dependency check
-for dep in bc curl grep xsltproc; do
+for dep in date curl grep printf sed xsltproc; do
 	which ${dep} &>/dev/null || die "Dependency not found: ${dep}"
 done
 

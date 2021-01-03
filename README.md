@@ -6,10 +6,10 @@ View the [CHANGELOG](CHANGELOG.md) for important changes.
 
 ### Dependencies
  - bash
- - bc
  - curl
- - coreutils
+ - coreutils (cat, cut, head, date, printf)
  - grep
+ - sed
  - xmllint (optional for validating responses)
  - xsltproc (libxslt)
 

@@ -68,7 +68,7 @@ function getProcessTime {
 		echo $(($endtime - $starttime))
 	else
 		diffms=$(( ($endtime - $starttime) / 1000000))
-        echo "scale=3; $diffms/1000" | bc
+		echo $(printf "%03d" $diffms) | sed 's/...$/.&/'
     fi
 }
 
