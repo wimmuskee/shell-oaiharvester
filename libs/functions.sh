@@ -56,17 +56,33 @@ function fetchUrl {
 	eval ${cmd}
 }
 
+# calculate processing time
+function getProcessTime {
+	local starttime=$1
+	local endtime=$2
+
+	# default date on macos does not support %N in date
+	if [[ "$(echo $starttime | tail -c 2)" == "N" ]]; then
+		starttime=$(echo $starttime | tr -d "N")
+		endtime=$(echo $endtime | tr -d "N")
+		echo $(($endtime - $starttime))
+	else
+		diffms=$(( ($endtime - $starttime) / 1000000))
+        echo "scale=3; $diffms/1000" | bc
+    fi
+}
+
 # getRecords function
 function getRecords {
 	# download the oaipage
-	local starttime=$(date +%s%N | cut -b1-13)
+	local starttime=$(date +%s%N)
 	fetchUrl ${URL} "${TMP}/oaipage.xml"
-	local endtime=$(date +%s%N | cut -b1-13)
-	local downloadtime=$(echo "scale=3; ($endtime - $starttime)/1000" | bc)
+	local endtime=$(date +%s%N)
+	local downloadtime=$(getProcessTime $starttime $endtime)
 
 	# process the downloaded xml
 	checkValidXml ${URL}
-	local starttime=$(date +%s%N | cut -b1-13)
+	local starttime=$(date +%s%N)
 	local conditional="${REPOSITORY_RECORDPATH}/${CONDITIONAL}"
 	local count=1
 	local record_count=$(getTargetData "record_count" "oaipage")
@@ -133,8 +149,8 @@ function getRecords {
 		count=$(( ${count} + 1 ))
 	done
 	
-	local endtime=$(date +%s%N | cut -b1-13)
-	local processtime=$(echo "scale=3; ($endtime - $starttime)/1000" | bc)
+	local endtime=$(date +%s%N)
+	local processtime=$(getProcessTime $starttime $endtime)
 
 	# write logline
 	echo "$(date '+%F %T'),$PID,$REPOSITORY,$URL,$record_count,$downloadtime,$processtime" >> ${LOGFILE}
