@@ -69,7 +69,7 @@ function getProcessTime {
 	else
 		diffms=$(( ($endtime - $starttime) / 1000000))
 		echo $(printf "%03d" $diffms) | sed 's/...$/.&/'
-    fi
+	fi
 }
 
 # getRecords function
