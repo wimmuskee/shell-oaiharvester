@@ -18,6 +18,17 @@ function testNotice {
 
 function testGetGenericConfig {
 	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/1" "$(getGenericConfig temppath)" "/tmp/oaiharvester"
+	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/2" "$(getGenericConfig recordpath)" "/var/db/oaiharvester"
+	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/3" "$(getGenericConfig logfile)" "/tmp/oaiharvester-log.csv"
+	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/4" "$(getGenericConfig curlopts)" "--retry 5 --silent --limit-rate 200k --user-agent \"shell-oaiharvester\""
+}
+
+function testGetRepositoryConfig {
+	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/1" "$(getRepositoryConfig baseurl repository_id)" "http://example.org/oaiprovider"
+	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/2" "$(getRepositoryConfig metadataprefix repository_id)" "lom"
+	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/3" "$(getRepositoryConfig set repository_id)" "test"
+	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/4" "$(getRepositoryConfig from repository_id)" "2012-02-29"
+	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/5" "$(getRepositoryConfig until repository_id)" "2012-03-01"
 }
 
 function testGetProcessTimeMac {
@@ -34,5 +45,6 @@ function testGetProcessTimeLinux {
 # call the functions
 testNotice
 testGetGenericConfig
+testGetRepositoryConfig
 testGetProcessTimeLinux
 testGetProcessTimeMac
