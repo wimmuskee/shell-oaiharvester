@@ -54,6 +54,7 @@ Options:
   -r, --repository[=id]         Sets the repository identifier to harvest. This corresponds
                                 with the identifier in the config file.
   -t, --test                    Do not harvest, but test if the repository validates.
+      --test-strict				Same as "-t", but not ignoring strict validation errors.
   -v, --version                 Displays the shell-oaiharvester version.
 EOF
 }
@@ -92,6 +93,7 @@ while [[ "$#" -gt 0 ]]; do
 		--quiet|-q) QUIET="true" ;;
 		--no-records|-n) VERB="ListIdentifiers" ;;
 		--test|-t) TEST="true" ;;
+		--test-strict) TEST_STRICT="true" ;;
 		--version|-v) echo "${VERSION}"; exit 0 ;;
 		*) die "$0: Unknown command input" ;;
 	esac
@@ -175,7 +177,7 @@ mkdir -p ${TMP} 2>/dev/null || die "Not able to create temporary workdir: ${TMP}
 
 # Find out if we want to validate only
 # no need for logfile in this step
-if [ "${TEST}" == "true" ]; then
+if [ "${TEST}" == "true" -o "${TEST_STRICT}" == "true" ]; then
 	testRepository
 	exit 0
 fi
