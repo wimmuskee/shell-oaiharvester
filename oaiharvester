@@ -221,25 +221,19 @@ checkHttpStatus $(getHttpStatus "${BASEURL}?verb=Identify")
 
 # and retrieve Identify for granularity and optional firsttimestamp
 fetchUrl "${BASEURL}?verb=Identify" "${TMP}/identify.xml"
+granularity=$(getTargetData "granularity" "identify")
 
 # Checks for a last harvest timestamp, and uses it
 # according to the granularity settings
-# Overwrites repository FROM config setting.
+# Overrides repository FROM config setting.
 if [ ! -z ${LASTTIMESTAMP} ]; then
-	# check valid timestamp
-	if [[ "$(echo ${LASTTIMESTAMP} | grep '^[0-9]\{4\}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-5][0-9]:[0-5][0-9]Z$')" == "" ]]; then
-		die "Invalid timestamp set"
-	fi
-
-	# check out identify for datetime granularity
-	granularity=$(getTargetData "granularity" "identify")
-	[[ "${granularity}" == "YYYY-MM-DD" ]] && LASTTIMESTAMP=${LASTTIMESTAMP:0:10}
-	URI_FROM="&from=${LASTTIMESTAMP}"
+	checkValidTimestamp ${LASTTIMESTAMP}
+	URI_FROM=$(getFromArgument ${LASTTIMESTAMP} ${granularity})
 else
 	# in case of first harvest, use the Identify earliestDatestamp
-	# assuming the Identify earliestDatestamp conforms to the repo's granularity
 	earliestdatestamp=$(getTargetData "earliestDatestamp" "identify")
-	[ ! -z ${earliestdatestamp} ] && URI_FROM="&from=${earliestdatestamp}"
+	checkValidTimestamp ${earliestdatestamp}
+	URI_FROM=$(getFromArgument ${earliestdatestamp} ${granularity})
 
 	# however, if FROM is set manually in the config, use that
 	# this is useful for debugging purposes

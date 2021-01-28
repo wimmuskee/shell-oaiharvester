@@ -20,6 +20,20 @@ function getTargetData {
 	echo $(xsltproc --stringparam data ${data} ${INSTALLDIR}/retrieveData.xsl ${TMP}/${target}.xml)
 }
 
+# Return correct oai from argument timestamp format based on granularity
+function getFromArgument {
+	local timestamp=$1
+	local granularity=$2
+
+	if [[ "${granularity}" == "YYYY-MM-DDThh:mm:ssZ" ]]; then
+		timestamp="${timestamp:0:19}Z"
+	else
+		# fallback all to YYYY-MM-DD
+		timestamp=${timestamp:0:10}
+	fi
+	echo "&from=${timestamp}"
+}
+
 # Checks if downloaded oaipage is valid for xslt processing.
 function checkValidXml {
 	local url=$1
@@ -27,6 +41,15 @@ function checkValidXml {
 
 	if [ "${response}" == "" ]; then
 		die "No responseDate found in source, probably not OAI-PMH: ${url}"
+	fi
+}
+
+# Checks if input timestamp matches the ISO 8601 (https://www.w3.org/TR/NOTE-datetime)
+function checkValidTimestamp {
+	local ts=$1
+
+	if [[ "$(echo ${ts} | grep -E '^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-5][0-9]:[0-5][0-9](\.[0-9]+)?Z$')" == "" ]]; then
+		die "Invalid timestamp set"
 	fi
 }
 

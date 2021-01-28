@@ -42,9 +42,23 @@ function testGetProcessTimeLinux {
 	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/3" "$(getProcessTime 1609667667874348012 1609667667944505924)" ".070"
 }
 
+function testGetFromArgument {
+	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/1" "$(getFromArgument 2015-09-30T22:00:00Z YYYY-MM-DD)" "&from=2015-09-30"
+	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/2" "$(getFromArgument 2015-09-30T22:00:00Z YYYY-MM-DDThh:mm:ssZ)" "&from=2015-09-30T22:00:00Z"
+	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/3" "$(getFromArgument 2015-09-30T22:00:00.123Z YYYY-MM-DDThh:mm:ssZ)" "&from=2015-09-30T22:00:00Z"
+}
+
+function testCheckValidTimestamp {
+	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/1" "$(checkValidTimestamp 2015-09-30T22:00:00Z)" ""
+	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/2" "$(checkValidTimestamp 2015-09-30T22:00:00.4567Z)" ""
+}
+
+
 # call the functions
 testNotice
 testGetGenericConfig
 testGetRepositoryConfig
 testGetProcessTimeLinux
 testGetProcessTimeMac
+testGetFromArgument
+testCheckValidTimestamp
