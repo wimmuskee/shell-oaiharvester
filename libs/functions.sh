@@ -158,7 +158,7 @@ function getRecords {
 
 function testRepository {
 	# check dependency
-	which xmllint2 &>/dev/null
+	which xmllint &>/dev/null
 	if [ $? -eq 1 ]; then
 		die "Dependency not found: xmllint, testing not available"
 	fi

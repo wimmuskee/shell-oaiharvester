@@ -54,7 +54,7 @@ Options:
   -r, --repository[=id]         Sets the repository identifier to harvest. This corresponds
                                 with the identifier in the config file.
   -t, --test                    Do not harvest, but test if the repository validates.
-      --test-strict				Same as "-t", but not ignoring strict validation errors.
+      --test-strict             Same as "-t", but not ignoring strict validation errors.
   -v, --version                 Displays the shell-oaiharvester version.
 EOF
 }
