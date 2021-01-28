@@ -181,7 +181,9 @@ function testRepository {
 
 	echo
 	echo "Validating the XML:"
-	echo "fails without report are ignored strict wildcard errors"
+	if [ "${TEST_STRICT}" != "true" ]; then
+		echo "fails without report are ignored strict wildcard errors"
+	fi
 	if [ ! -f ${TMP}/OAI-PMH.xsd ]; then
 		curl --silent "http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd" -o ${TMP}/OAI-PMH.xsd
 	fi
@@ -190,7 +192,11 @@ function testRepository {
 	# http://blog.gmane.org/gmane.comp.gnome.lib.xml.general/month=20091101/page=2
 	for xml in identify listmetadataformats listsets listrecords listidentifiers; do
 		if [ -s ${TMP}/${xml}.xml ]; then
-			xmllint --noout --schema ${TMP}/OAI-PMH.xsd ${TMP}/${xml}.xml 2>&1| grep -v strict
+			if [ "${TEST_STRICT}" == "true" ]; then
+				xmllint --noout --schema ${TMP}/OAI-PMH.xsd ${TMP}/${xml}.xml 2>&1
+			else
+				xmllint --noout --schema ${TMP}/OAI-PMH.xsd ${TMP}/${xml}.xml 2>&1| grep -v strict
+			fi
 		fi
 	done
 
