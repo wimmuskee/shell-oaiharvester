@@ -56,6 +56,9 @@ To only retrieve identifiers:
 Not harvest, but validate the repository
 ```oaiharvester -r <repository_id> -t```
 
+To perform strict validation use:
+```oaiharvester -r <repository_id> --test-strict```
+
 To list configured repositories:
 ```oaiharvester -l```
 
