@@ -4,6 +4,19 @@ Notable changes will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# [2.3.0]
+### Added
+- Strict validation option with --test-strict, thx [jesteves](https://github.com/jesteves).
+
+### Changed
+- Expand timestamp validation to include decimal fractions.
+- Use timestamp validation on identify earliestdatestamp (not just session lasttimestamp).
+- Always use identify granularity when determining correct "from" request argument.
+- Invalid granularity falls back to YYYY-MM-DD format.
+
+### Fixed
+- Check on xmllint bin existence when testing.
+
 # [2.2.1]
 ### Added
 - More unittests for configuration reader.
