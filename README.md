@@ -3,6 +3,7 @@ The OAI-PMH Shell Harvester is able to harvest OAI-PMH targets. It supports mult
 View the [CHANGELOG](CHANGELOG.md) for important changes.
 
 ## Installation
+Use sudo/root where needed.
 
 ### Dependencies
  - bash
@@ -13,8 +14,7 @@ View the [CHANGELOG](CHANGELOG.md) for important changes.
  - xmllint (optional for validating responses)
  - xsltproc (libxslt)
 
-### Manual Install
-Use sudo/root where needed.
+### Manual
  - git clone https://github.com/wimmuskee/shell-oaiharvester.git
  - cd shell-oaiharvester
  - cp oaiharvester /usr/bin/oaiharvester
@@ -22,6 +22,17 @@ Use sudo/root where needed.
  - cp libs/* /usr/share/shell-oaiharvester/.
  - mkdir /etc/shell-oaiharvester
  - cp config.example.xml /etc/shell-oaiharvester/config.xml
+
+### Make
+ - git clone https://github.com/wimmuskee/shell-oaiharvester.git
+ - cd shell-oaiharvester
+ - autoreconf -i
+ - ./configure
+ - make
+ - make install
+
+### Gentoo
+Package available in the flavour overlay.
 
 ## Usage
 
