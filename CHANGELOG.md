@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added 
 - Harvesting of non-xml content (json for instance).
+- Unittests for getTargetData.
+
+### Changed
+- getTargetData function can be used for record data.
 
 ## [2.3.1]
 ### Added

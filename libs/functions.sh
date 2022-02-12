@@ -17,7 +17,12 @@ function getRepositoryConfig {
 function getTargetData {
 	local data=$1
 	local target=$2
-	echo $(xsltproc --stringparam data ${data} ${INSTALLDIR}/retrieveData.xsl ${TMP}/${target}.xml)
+	local recordnr=$3
+	if [ -z $recordnr ]; then
+		echo $(xsltproc --stringparam data ${data} ${INSTALLDIR}/retrieveData.xsl ${TMP}/${target}.xml)
+	else
+		echo $(xsltproc --stringparam data ${data} --param record_nr ${recordnr} ${INSTALLDIR}/retrieveData.xsl ${TMP}/${target}.xml)
+	fi
 }
 
 # Return correct oai from argument timestamp format based on granularity
@@ -116,13 +121,11 @@ function getRecords {
 	while [ ${count} -le ${record_count} ]; do
 		# get oai identifier and actual storage dir (based on first 2 chars of md5sum identifier)
 		local identifier=$(xsltproc --stringparam data identifier --param record_nr ${count} ${INSTALLDIR}/retrieveData.xsl ${TMP}/oaipage.xml | sed s/\\//\%2F/g | sed s/\&/\%26/g | sed s/\ /\%20/g)
-		local datestamp=$(xsltproc --stringparam data datestamp --param record_nr ${count} ${INSTALLDIR}/retrieveData.xsl ${TMP}/oaipage.xml)
+		local datestamp=$(getTargetData "datestamp" "oaipage" ${count})
+		local status=$(getTargetData "headerstatus" "oaipage" ${count})
 		local filename="${identifier}"
 		local storedir=$(echo -n "${identifier}" | md5sum | head -c 2)
 		local path="${REPOSITORY_RECORDPATH}/${storedir}/${filename}"
-
-		# check if status is deleted
-		local status=$(xsltproc --stringparam data headerstatus --param record_nr ${count} ${INSTALLDIR}/retrieveData.xsl ${TMP}/oaipage.xml)
 
 		if [ "${status}" == "deleted" ]; then
 			if [ ! -z "${REPOSITORY_DELETE_CMD}" ]; then
@@ -135,7 +138,7 @@ function getRecords {
 			rm -f "${path}" > /dev/null 2>&1
 		else
 			# Store temporary record
-			local format=$(xsltproc --stringparam data format --param record_nr ${count} ${INSTALLDIR}/retrieveData.xsl ${TMP}/oaipage.xml)
+			local format=$(getTargetData "format" "oaipage" ${count})
 			if [ "${format}" == "xml" ]; then
 				xsltproc --param record_nr ${count} ${INSTALLDIR}/retrieveXmlRecord.xsl ${TMP}/oaipage.xml > ${TMP}/harvested.xml
 			else

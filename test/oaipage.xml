@@ -10,7 +10,21 @@
 				<datestamp>2022-02-09T21:19:09Z</datestamp>
 			</header>
 			<metadata>
+				<examplerecord xmlns="https://example.org/ns">testxml</examplerecord>
 			</metadata>
+		</record>
+		<record>
+			<header>
+				<identifier>1d919cd0-3aef-43c0-bd71-fd9ebc733fde</identifier>
+				<datestamp>2022-02-10T21:19:09Z</datestamp>
+			</header>
+			<metadata>testtext</metadata>
+		</record>
+		<record>
+			<header status="deleted">
+				<identifier>0a7009a2-54ce-4649-a626-d8d94f1636a4</identifier>
+				<datestamp>2022-02-10T21:20:09Z</datestamp>
+			</header>
 		</record>
 	</ListRecords>
 </OAI-PMH>
