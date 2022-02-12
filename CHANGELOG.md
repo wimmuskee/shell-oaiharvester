@@ -4,12 +4,16 @@ Notable changes will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-# [2.3.1]
+## [Unreleased]
+### Added 
+- Harvesting of non-xml content (json for instance).
+
+## [2.3.1]
 ### Added
 - Url-encoding for + sign in resumptionToken, thx [justinkelly](https://github.com/justinkelly).
 - Improved install documentation.
 
-# [2.3.0]
+## [2.3.0]
 ### Added
 - Strict validation option with --test-strict, thx [jesteves](https://github.com/jesteves).
 
@@ -22,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Check on xmllint bin existence when testing.
 
-# [2.2.1]
+## [2.2.1]
 ### Added
 - More unittests for configuration reader.
 

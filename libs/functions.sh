@@ -100,6 +100,7 @@ function getRecords {
 	# download the oaipage
 	local starttime=$(date +%s%N)
 	fetchUrl ${URL} "${TMP}/oaipage.xml"
+	cp "${TMP}/oaipage.xml" /tmp/oaipage.xml
 	local endtime=$(date +%s%N)
 	local downloadtime=$(getProcessTime $starttime $endtime)
 
@@ -134,10 +135,15 @@ function getRecords {
 			rm -f "${path}" > /dev/null 2>&1
 		else
 			# Store temporary record
-			xsltproc --param record_nr ${count} ${INSTALLDIR}/retrieveRecord.xsl ${TMP}/oaipage.xml > ${TMP}/harvested.xml
+			local format=$(xsltproc --stringparam data format --param record_nr ${count} ${INSTALLDIR}/retrieveData.xsl ${TMP}/oaipage.xml)
+			if [ "${format}" == "xml" ]; then
+				xsltproc --param record_nr ${count} ${INSTALLDIR}/retrieveXmlRecord.xsl ${TMP}/oaipage.xml > ${TMP}/harvested.xml
+			else
+				xsltproc --param record_nr ${count} ${INSTALLDIR}/retrieveTextRecord.xsl ${TMP}/oaipage.xml > ${TMP}/harvested.xml
+			fi
 
 			# first parse conditional xslt if available
-			if [ ! -z ${conditional} ] && [ -f ${conditional} ]; then
+			if [ ! -z ${conditional} ] && [ -f ${conditional} ] && [ "${format}" == "xml" ]; then
 				if [ "$(xsltproc ${conditional} ${TMP}/harvested.xml)" == "" ]; then
 					# conditional not met, delete record
 					rm ${TMP}/harvested.xml

@@ -48,6 +48,18 @@
 					<xsl:value-of select="/oai:OAI-PMH/oai:ListIdentifiers/oai:header[$record_nr]/@status"/>
 				</xsl:if>
 			</xsl:when>
+			<xsl:when test="$data='format'">
+				<xsl:if test="/oai:OAI-PMH/oai:ListRecords">
+					<xsl:choose>
+						<xsl:when test="count(/oai:OAI-PMH/oai:ListRecords/oai:record[$record_nr]/oai:metadata/child::*)>0">
+							<xsl:text>xml</xsl:text>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:text>text</xsl:text>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:if>
+			</xsl:when>
 			<xsl:when test="$data='error'">
 				<xsl:if test="/oai:OAI-PMH/oai:error">
 					<xsl:value-of select="concat( /oai:OAI-PMH/oai:error/@code, ' - ',/oai:OAI-PMH/oai:error)"/>
