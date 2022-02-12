@@ -8,6 +8,7 @@ TESTCLASS="functions"
 
 INSTALLDIR="../libs"
 CONFIGFILE="../config.example.xml"
+TMP="."
 
 function testNotice {
 	QUIET="true"
@@ -29,6 +30,11 @@ function testGetRepositoryConfig {
 	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/3" "$(getRepositoryConfig set repository_id)" "test"
 	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/4" "$(getRepositoryConfig from repository_id)" "2012-02-29"
 	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/5" "$(getRepositoryConfig until repository_id)" "2012-03-01"
+}
+
+function testGetTargetData {
+	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/1" "$(getTargetData record_count oaipage)" "1"
+	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/2" "$(getTargetData responsedate oaipage)" "2022-02-12T06:07:40Z"
 }
 
 function testGetProcessTimeMac {
@@ -58,6 +64,7 @@ function testCheckValidTimestamp {
 testNotice
 testGetGenericConfig
 testGetRepositoryConfig
+testGetTargetData
 testGetProcessTimeLinux
 testGetProcessTimeMac
 testGetFromArgument

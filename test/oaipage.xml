@@ -1,0 +1,16 @@
+<OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+	<responseDate>2022-02-12T06:07:40Z</responseDate>
+	<request verb="ListRecords" metadataPrefix="lom">https://example.org/provider/</request>
+	<ListRecords>
+		<record>
+			<header>
+				<identifier>b3091055-e419-4eac-8282-3e77f90a0cda</identifier>
+				<datestamp>2022-02-09T21:19:09Z</datestamp>
+			</header>
+			<metadata>
+			</metadata>
+		</record>
+	</ListRecords>
+</OAI-PMH>
