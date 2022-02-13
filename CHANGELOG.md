@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - getTargetData function can be used for record data.
 
+### Deprecated
+- The ability to set a repository conditional xslt will be removed after 2022-06.
+
 ## [2.3.1]
 ### Added
 - Url-encoding for + sign in resumptionToken, thx [justinkelly](https://github.com/justinkelly).

@@ -154,6 +154,9 @@ REPOSITORY_PASSWORD=$(getRepositoryConfig "password" ${REPOSITORY})
 [ ! -z ${SET} ] && URI_SET="&set=${SET}"
 [ ! -z ${UNTIL} ] && URI_UNTIL="&until=$UNTIL"
 
+# deprecation
+[ ! -z ${CONDITIONAL} ] && echo "DEPRECATED: the repository conditional function is going to be removed after 2022-06"
+
 # Set some sane defaults
 # all workfiles go into a random tmp directory
 RECORDPATH=${RECORDPATH:-/tmp}
