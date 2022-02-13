@@ -5,6 +5,11 @@ function notice {
 	[[ "${QUIET}" != "true" ]] && echo ${msg}
 }
 
+function warning {
+	local msg=$1
+	echo "WARNING: ${msg}"
+}
+
 # Store status info in .oaihavester file.
 function setRepositoryStatus {
 	local statusfile=$1

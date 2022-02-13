@@ -17,6 +17,10 @@ function testNotice {
 	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/2" "$(notice "starting test")" "starting test" 
 }
 
+function testWarning {
+	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/1" "$(warning "test")" "WARNING: test"
+}
+
 function testGetGenericConfig {
 	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/1" "$(getGenericConfig temppath)" "/tmp/oaiharvester"
 	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/2" "$(getGenericConfig recordpath)" "/var/db/oaiharvester"
@@ -67,6 +71,7 @@ function testCheckValidTimestamp {
 
 # call the functions
 testNotice
+testWarning
 testGetGenericConfig
 testGetRepositoryConfig
 testGetTargetData

@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - getTargetData function can be used for record data.
+- Use default value (Unix Epoch) for earliestDatestamp when missing from source Identify.
 
 ### Deprecated
 - The ability to set a repository conditional xslt will be removed after 2022-06.

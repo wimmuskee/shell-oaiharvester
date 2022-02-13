@@ -155,7 +155,7 @@ REPOSITORY_PASSWORD=$(getRepositoryConfig "password" ${REPOSITORY})
 [ ! -z ${UNTIL} ] && URI_UNTIL="&until=$UNTIL"
 
 # deprecation
-[ ! -z ${CONDITIONAL} ] && echo "DEPRECATED: the repository conditional function is going to be removed after 2022-06"
+[ ! -z ${CONDITIONAL} ] && warning "Deprecated, the repository conditional function is going to be removed after 2022-06"
 
 # Set some sane defaults
 # all workfiles go into a random tmp directory
@@ -235,6 +235,10 @@ if [ ! -z ${LASTTIMESTAMP} ]; then
 else
 	# in case of first harvest, use the Identify earliestDatestamp
 	earliestdatestamp=$(getTargetData "earliestDatestamp" "identify")
+	if [ -z ${earliestdatestamp} ]; then
+		warning "earliestDatestamp empty, using 1970-01-01T00:00:00Z"
+		earliestdatestamp="1970-01-01T00:00:00Z"
+	fi
 	checkValidTimestamp ${earliestdatestamp}
 	URI_FROM=$(getFromArgument ${earliestdatestamp} ${granularity})
 
