@@ -145,37 +145,17 @@ function getRecords {
 				xsltproc --param record_nr ${count} ${INSTALLDIR}/retrieveTextRecord.xsl ${TMP}/oaipage.xml > ${TMP}/harvested.xml
 			fi
 
-			# first parse conditional xslt if available
-			if [ ! -z ${conditional} ] && [ -f ${conditional} ] && [ "${format}" == "xml" ]; then
-				if [ "$(xsltproc ${conditional} ${TMP}/harvested.xml)" == "" ]; then
-					# conditional not met, delete record
-					rm ${TMP}/harvested.xml
-				else
-					mv ${TMP}/harvested.xml ${TMP}/passed-conditional.xml
-				fi
-			else
-				mv ${TMP}/harvested.xml ${TMP}/passed-conditional.xml
+			mkdir -p "${REPOSITORY_RECORDPATH}/${storedir}"
+			mv ${TMP}/harvested.xml "${path}"
+
+			if [ ! -z "${REPOSITORY_UPDATE_CMD}" ]; then
+				eval ${REPOSITORY_UPDATE_CMD}
 			fi
 
-			# store record if it passed the conditional test
-			if [ -f ${TMP}/passed-conditional.xml ]; then
-				mkdir -p "${REPOSITORY_RECORDPATH}/${storedir}"
-				mv ${TMP}/passed-conditional.xml "${path}"
-
-				if [ ! -z "${REPOSITORY_UPDATE_CMD}" ]; then
-					eval ${REPOSITORY_UPDATE_CMD}
-				fi
-
-				if [ ! -z "${UPDATE_CMD}" ]; then
-					eval ${UPDATE_CMD}
-				fi
+			if [ ! -z "${UPDATE_CMD}" ]; then
+				eval ${UPDATE_CMD}
 			fi
 
-			# do translate here if translate is true
-			# still to do
-			#xsltproc --param record_nr ${count} retrieveRecord.xsl oaipage.xml > /tmp/record.xml
-			#xsltproc modules/lom/stripUrls.xsl /tmp/record.xml > "${STORE_DIR}/${name}"
-			#rm /tmp/record.xml
 		fi
 		echo "$(date '+%F %T'),${REPOSITORY},${datestamp},${identifier}" >> ${RECORDLOGFILE}
 		count=$(( ${count} + 1 ))

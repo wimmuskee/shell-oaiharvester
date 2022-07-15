@@ -67,9 +67,6 @@
 			<xsl:when test="$data='resumptiontoken'">
 				<xsl:value-of select="/cfg:config/cfg:repository[@id=$repository]/cfg:resumptiontoken"/>
 			</xsl:when>
-			<xsl:when test="$data='conditional'">
-				<xsl:value-of select="/cfg:config/cfg:repository[@id=$repository]/cfg:conditional"/>
-			</xsl:when>
 			<xsl:when test="$data='repository_path'">
 				<xsl:value-of select="/cfg:config/cfg:repository[@id=$repository]/cfg:recordpath"/>
 			</xsl:when>
