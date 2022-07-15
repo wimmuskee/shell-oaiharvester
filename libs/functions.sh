@@ -137,16 +137,16 @@ function getRecords {
 			fi
 			rm -f "${path}" > /dev/null 2>&1
 		else
-			# Store temporary record
+			# ensure storage dir
+			test -d "${REPOSITORY_RECORDPATH}/${storedir}" || mkdir -p "${REPOSITORY_RECORDPATH}/${storedir}"
+
+			# retrieve record based on format
 			local format=$(getTargetData "format" "oaipage" ${count})
 			if [ "${format}" == "xml" ]; then
-				xsltproc --param record_nr ${count} ${INSTALLDIR}/retrieveXmlRecord.xsl ${TMP}/oaipage.xml > ${TMP}/harvested.xml
+				xsltproc --param record_nr ${count} ${INSTALLDIR}/retrieveXmlRecord.xsl ${TMP}/oaipage.xml > "${path}" 
 			else
-				xsltproc --param record_nr ${count} ${INSTALLDIR}/retrieveTextRecord.xsl ${TMP}/oaipage.xml > ${TMP}/harvested.xml
+				xsltproc --param record_nr ${count} ${INSTALLDIR}/retrieveTextRecord.xsl ${TMP}/oaipage.xml > "${path}" 
 			fi
-
-			mkdir -p "${REPOSITORY_RECORDPATH}/${storedir}"
-			mv ${TMP}/harvested.xml "${path}"
 
 			if [ ! -z "${REPOSITORY_UPDATE_CMD}" ]; then
 				eval ${REPOSITORY_UPDATE_CMD}

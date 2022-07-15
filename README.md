@@ -8,7 +8,7 @@ Use sudo/root where needed.
 ### Dependencies
  - bash
  - curl
- - coreutils (cat, cut, head, date, printf)
+ - coreutils (cat, cut, head, date, printf, test)
  - grep
  - sed
  - xmllint (optional for validating responses)
