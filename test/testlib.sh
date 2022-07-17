@@ -55,3 +55,9 @@ function assertPattern {
 		echo "1" > "testresult"
 	fi
 }
+
+# Test die responses without application cleanup
+function die {
+	local message=$1
+	echo ${message}
+}

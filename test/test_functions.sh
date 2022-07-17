@@ -67,11 +67,14 @@ function testCheckValidTimestamp {
 	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/1" "$(checkValidTimestamp 2015-09-30T22:00:00Z YYYY-MM-DDThh:mm:ssZ)" ""
 	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/2" "$(checkValidTimestamp 2015-09-30T22:00:00.4567Z YYYY-MM-DDThh:mm:ssZ)" ""
 	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/3" "$(checkValidTimestamp 2015-09-30 YYYY-MM-DD)" ""
+	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/4" "$(checkValidTimestamp 2015-09-30T13 YYYY-MM-DD)" "Invalid date set: 2015-09-30T13, expecting YYYY-MM-DD"
+	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/5" "$(checkValidTimestamp 2015-09-30T13 YYYY-MM-DDThh:mm:ssZ)" "Invalid timestamp set: 2015-09-30T13, expecting YYYY-MM-DDThh:mm:ssZ"
 }
 
 function testCheckValidGranularity {
 	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/1" "$(checkValidGranularity YYYY-MM-DDThh:mm:ssZ)" ""
 	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/2" "$(checkValidGranularity YYYY-MM-DD)" ""
+	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/3" "$(checkValidGranularity YYYY-DD-MM)" "Invalid granularity value: YYYY-DD-MM"
 }
 
 # call the functions

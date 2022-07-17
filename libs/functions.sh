@@ -65,11 +65,11 @@ function checkValidTimestamp {
 
 	if [[ "${granularity}" == "YYYY-MM-DDThh:mm:ssZ" ]]; then
 		if [[ "$(echo ${timestamp} | grep -E '^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-5][0-9]:[0-5][0-9](\.[0-9]+)?Z$')" == "" ]]; then
-			die "Invalid timestamp set"
+			die "Invalid timestamp set: ${timestamp}, expecting YYYY-MM-DDThh:mm:ssZ"
 		fi
 	else
 		if [[ "$(echo ${timestamp} | grep -E '^[0-9]{4}-[0-1][0-9]-[0-3][0-9]$')" == "" ]]; then
-			die "Invalid date set"
+			die "Invalid date set: ${timestamp}, expecting YYYY-MM-DD"
 		fi
 	fi
 }
