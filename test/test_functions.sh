@@ -64,8 +64,9 @@ function testGetFromArgument {
 }
 
 function testCheckValidTimestamp {
-	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/1" "$(checkValidTimestamp 2015-09-30T22:00:00Z)" ""
-	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/2" "$(checkValidTimestamp 2015-09-30T22:00:00.4567Z)" ""
+	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/1" "$(checkValidTimestamp 2015-09-30T22:00:00Z YYYY-MM-DDThh:mm:ssZ)" ""
+	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/2" "$(checkValidTimestamp 2015-09-30T22:00:00.4567Z YYYY-MM-DDThh:mm:ssZ)" ""
+	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/3" "$(checkValidTimestamp 2015-09-30 YYYY-MM-DD)" ""
 }
 
 

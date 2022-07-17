@@ -226,7 +226,7 @@ granularity=$(getTargetData "granularity" "identify")
 # according to the granularity settings
 # Overrides repository FROM config setting.
 if [ ! -z ${LASTTIMESTAMP} ]; then
-	checkValidTimestamp ${LASTTIMESTAMP}
+	checkValidTimestamp ${LASTTIMESTAMP} "YYYY-MM-DDThh:mm:ssZ"
 	URI_FROM=$(getFromArgument ${LASTTIMESTAMP} ${granularity})
 else
 	# in case of first harvest, use the Identify earliestDatestamp
@@ -235,7 +235,7 @@ else
 		warning "earliestDatestamp empty, using 1970-01-01T00:00:00Z"
 		earliestdatestamp="1970-01-01T00:00:00Z"
 	fi
-	checkValidTimestamp ${earliestdatestamp}
+	checkValidTimestamp ${earliestdatestamp} ${granularity}
 	URI_FROM=$(getFromArgument ${earliestdatestamp} ${granularity})
 
 	# however, if FROM is set manually in the config, use that

@@ -49,12 +49,19 @@ function checkValidXml {
 	fi
 }
 
-# Checks if input timestamp matches the ISO 8601 (https://www.w3.org/TR/NOTE-datetime)
+# Checks if input timestamp matches the ISO 8601 (https://www.w3.org/TR/NOTE-datetime) or date depending on granularity
 function checkValidTimestamp {
-	local ts=$1
+	local timestamp=$1
+	local granularity=$2
 
-	if [[ "$(echo ${ts} | grep -E '^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-5][0-9]:[0-5][0-9](\.[0-9]+)?Z$')" == "" ]]; then
-		die "Invalid timestamp set"
+	if [[ "${granularity}" == "YYYY-MM-DDThh:mm:ssZ" ]]; then
+		if [[ "$(echo ${timestamp} | grep -E '^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-5][0-9]:[0-5][0-9](\.[0-9]+)?Z$')" == "" ]]; then
+			die "Invalid timestamp set"
+		fi
+	else
+		if [[ "$(echo ${timestamp} | grep -E '^[0-9]{4}-[0-1][0-9]-[0-3][0-9]$')" == "" ]]; then
+			die "Invalid date set"
+		fi
 	fi
 }
 
