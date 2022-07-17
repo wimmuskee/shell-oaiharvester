@@ -69,6 +69,10 @@ function testCheckValidTimestamp {
 	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/3" "$(checkValidTimestamp 2015-09-30 YYYY-MM-DD)" ""
 }
 
+function testCheckValidGranularity {
+	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/1" "$(checkValidGranularity YYYY-MM-DDThh:mm:ssZ)" ""
+	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/2" "$(checkValidGranularity YYYY-MM-DD)" ""
+}
 
 # call the functions
 testNotice
@@ -80,3 +84,4 @@ testGetProcessTimeLinux
 testGetProcessTimeMac
 testGetFromArgument
 testCheckValidTimestamp
+testCheckValidGranularity

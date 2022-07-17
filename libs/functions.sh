@@ -49,6 +49,15 @@ function checkValidXml {
 	fi
 }
 
+# Checks if set granularity is one of 2 valid strings
+function checkValidGranularity {
+	local granularity=$1
+
+	if [[ "${granularity}" != "YYYY-MM-DDThh:mm:ssZ" ]] && [[ "${granularity}" != "YYYY-MM-DD" ]]; then
+		die "Invalid granularity value: ${granularity}"
+	fi
+}
+
 # Checks if input timestamp matches the ISO 8601 (https://www.w3.org/TR/NOTE-datetime) or date depending on granularity
 function checkValidTimestamp {
 	local timestamp=$1

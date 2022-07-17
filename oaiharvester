@@ -221,6 +221,7 @@ checkHttpStatus $(getHttpStatus "${BASEURL}?verb=Identify")
 # and retrieve Identify for granularity and optional firsttimestamp
 fetchUrl "${BASEURL}?verb=Identify" "${TMP}/identify.xml"
 granularity=$(getTargetData "granularity" "identify")
+checkValidGranularity ${granularity}
 
 # Checks for a last harvest timestamp, and uses it
 # according to the granularity settings
