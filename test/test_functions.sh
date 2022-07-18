@@ -44,6 +44,8 @@ function testGetTargetData {
 	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/5" "$(getTargetData datestamp oaipage 2)" "2022-02-10T21:19:09Z"
 	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/6" "$(getTargetData headerstatus oaipage 3)" "deleted"
 	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/7" "$(getTargetData headerstatus oaipage 2)" ""
+	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/8" "$(getTargetData error_code errorpage)" "cannotDisseminateFormat"
+	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/8" "$(getTargetData error_message errorpage)" "invalid metadataPrefix"
 }
 
 function testGetProcessTimeMac {

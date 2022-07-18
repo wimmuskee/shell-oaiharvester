@@ -260,8 +260,11 @@ startharvestts=$(date -u +'%FT%TZ')
 getRecords
 
 # If oai error on the first page, exit with found error.
-ERROR=$(getTargetData "error" "oaipage")
-[ "${ERROR}" != "" ] && die ${ERROR}
+ERROR_CODE=$(getTargetData "error_code" "oaipage")
+if [ "${ERROR_CODE}" != "" ]; then
+	ERROR_MESSAGE=$(getTargetData "error_message" "oaipage")
+	die "${ERROR_CODE} - ${ERROR_MESSAGE}"
+fi
 
 RESUMPTION=$(getTargetData "resumptiontoken" "oaipage")
 

@@ -60,9 +60,14 @@
 					</xsl:choose>
 				</xsl:if>
 			</xsl:when>
-			<xsl:when test="$data='error'">
+			<xsl:when test="$data='error_code'">
 				<xsl:if test="/oai:OAI-PMH/oai:error">
-					<xsl:value-of select="concat( /oai:OAI-PMH/oai:error/@code, ' - ',/oai:OAI-PMH/oai:error)"/>
+					<xsl:value-of select="/oai:OAI-PMH/oai:error/@code"/>
+				</xsl:if>
+			</xsl:when>
+			<xsl:when test="$data='error_message'">
+				<xsl:if test="/oai:OAI-PMH/oai:error">
+					<xsl:value-of select="/oai:OAI-PMH/oai:error"/>
 				</xsl:if>
 			</xsl:when>
 		</xsl:choose>
