@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Granularity validation.
 
+### Changed
+- A noRecordsMatch error on the first page emits a warning instead of exiting the harvest process. This means the lasttimestamp value is now set after harvesting an empty resultset.
+
 ### Fixed
 - Identify earliestDatestamp validation is now dependent on provided granularity.
 

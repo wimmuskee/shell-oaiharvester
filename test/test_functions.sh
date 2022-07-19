@@ -79,6 +79,12 @@ function testCheckValidGranularity {
 	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/3" "$(checkValidGranularity YYYY-DD-MM)" "Invalid granularity value: YYYY-DD-MM"
 }
 
+function testParseError {
+	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/1" "$(parseError)" ""
+	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/2" "$(parseError noRecordsMatch)" "WARNING: noRecordsMatch - empty result"
+	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/2" "$(parseError otherError errormessage)" "otherError - errormessage"
+}
+
 # call the functions
 testNotice
 testWarning
@@ -90,3 +96,4 @@ testGetProcessTimeMac
 testGetFromArgument
 testCheckValidTimestamp
 testCheckValidGranularity
+testParseError

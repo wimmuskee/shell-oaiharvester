@@ -259,13 +259,12 @@ notice "Starting harvest with PID ${PID} from: ${URL}"
 startharvestts=$(date -u +'%FT%TZ')
 getRecords
 
-# If oai error on the first page, exit with found error.
+# Parse error if present on the first page
 ERROR_CODE=$(getTargetData "error_code" "oaipage")
-if [ "${ERROR_CODE}" != "" ]; then
-	ERROR_MESSAGE=$(getTargetData "error_message" "oaipage")
-	die "${ERROR_CODE} - ${ERROR_MESSAGE}"
-fi
+ERROR_MESSAGE=$(getTargetData "error_message" "oaipage")
+parseError ${ERROR_CODE} "${ERROR_MESSAGE}"
 
+# Handle resumptionToken
 RESUMPTION=$(getTargetData "resumptiontoken" "oaipage")
 
 while [ "${RESUMPTION}" != "" ]; do

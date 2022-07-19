@@ -91,6 +91,22 @@ function checkHttpStatus {
 	notice "Checking status code: ${msg}"
 }
 
+# parses error code with conditional response
+function parseError {
+	local code=$1
+	local message=$2
+
+	if [[ "${code}" == "" ]]; then
+		return
+	fi
+
+	if [[ "${code}" == "noRecordsMatch" ]]; then
+		warning "${code} - empty result"
+	else
+		die "${code} - ${message}"
+	fi
+}
+
 # download url to destination file
 function fetchUrl {
 	local url=$1
