@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2012-2021 Wim Muskee <wimmuskee@gmail.com>
+# Copyright 2012-2022 Wim Muskee <wimmuskee@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 # root check
 [ $(whoami) == "root" ] && echo "Don't use this tool logged in as root." && exit 1
 
-VERSION="2.4.0"
+VERSION="2.5.0"
 VERB="ListRecords"
 CONFIGFILE="/etc/shell-oaiharvester/config.xml"
 INSTALLDIR="/usr/share/shell-oaiharvester"
