@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2012-2022 Wim Muskee <wimmuskee@gmail.com>
+# Copyright 2012-2025 Wim Muskee <wimmuskee@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -201,7 +201,7 @@ fi
 
 # Try to load repository status
 if [ -f ${REPOSITORY_STATUSFILE} ]; then
-	source "${REPOSITORY_RECORDPATH}/.oaiharvester"
+	source ${REPOSITORY_STATUSFILE}
 else
 	# if not there, either new, or pre-2.0.0
 	if [ -f "${REPOSITORY_RECORDPATH}/lasttimestamp.txt" ]; then
@@ -223,9 +223,8 @@ fetchUrl "${BASEURL}?verb=Identify" "${TMP}/identify.xml"
 granularity=$(getTargetData "granularity" "identify")
 checkValidGranularity ${granularity}
 
-# Checks for a last harvest timestamp, and uses it
-# according to the granularity settings
-# Overrides repository FROM config setting.
+# Checks for a last harvest timestamp (from Identify if first harvest, or
+# previous harvest, and uses it according to the granularity settings.
 if [ ! -z ${LASTTIMESTAMP} ]; then
 	checkValidTimestamp ${LASTTIMESTAMP} "YYYY-MM-DDThh:mm:ssZ"
 	URI_FROM=$(getFromArgument ${LASTTIMESTAMP} ${granularity})
@@ -238,10 +237,13 @@ else
 	fi
 	checkValidTimestamp ${earliestdatestamp} ${granularity}
 	URI_FROM=$(getFromArgument ${earliestdatestamp} ${granularity})
+fi
 
-	# however, if FROM is set manually in the config, use that
-	# this is useful for debugging purposes
-	[ ! -z ${FROM} ] && URI_FROM="&from=${FROM}"
+# If FROM is set manually in the config, use that
+# this is useful for debugging purposes
+if [ ! -z ${FROM} ]; then
+	warning "Using manual FROM config override: ${FROM}"
+	URI_FROM="&from=${FROM}"
 fi
 
 # Sets the initial harvest uri
