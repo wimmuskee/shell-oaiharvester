@@ -48,6 +48,11 @@ function testGetTargetData {
 	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/8" "$(getTargetData error_message errorpage)" "invalid metadataPrefix"
 }
 
+function testGetIdentifyEarliestDatastamp {
+	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/1" "$(getTargetData earliestDatestamp identify)" "2000-01-02"
+	assertEmpty "${TESTCLASS}/${FUNCNAME[0]}/2" "$(getTargetData earliestDatestamp identify-missingdatestamp)"
+}
+
 function testGetProcessTimeMac {
 	assertEqual "${TESTCLASS}/${FUNCNAME[0]}/1" "$(getProcessTime 1609667471N 1609667477N)" "6"
 }
@@ -91,6 +96,7 @@ testWarning
 testGetGenericConfig
 testGetRepositoryConfig
 testGetTargetData
+testGetIdentifyEarliestDatastamp
 testGetProcessTimeLinux
 testGetProcessTimeMac
 testGetFromArgument

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/
+         http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+	<responseDate>2025-12-22T21:55:36Z</responseDate>
+	<request verb="Identify">https://www.example.org/oaiprovider</request>
+	<Identify>
+		<repositoryName>Example Open Archive Initiative Repository</repositoryName>
+		<baseURL>https://www.example.org/oaiprovider</baseURL>
+		<protocolVersion>2.0</protocolVersion>
+		<adminEmail>webmaster@example.org</adminEmail>
+		<earliestDatestamp>2000-01-02</earliestDatestamp>
+		<deletedRecord>no</deletedRecord>
+		<granularity>YYYY-MM-DD</granularity>
+	</Identify>
+</OAI-PMH>

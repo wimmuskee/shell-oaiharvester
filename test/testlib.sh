@@ -16,6 +16,20 @@ function assertEqual {
 	fi
 }
 
+function assertEmpty {
+	local test=$1
+	local result=$2
+
+	if [ -z ${result} ]; then
+		echo "# ${test}: SUCCESS"
+	else
+		echo "# ${test}: FAILED"
+		echo "result: ${result}"
+		echo "expected: empty"
+		echo "1" > "testresult"
+	fi
+}
+
 function assertFileExists {
 	local test=$1
 	local filepath=$2
