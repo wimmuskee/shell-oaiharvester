@@ -17,7 +17,7 @@
 # root check
 [ $(whoami) == "root" ] && echo "Don't use this tool logged in as root." && exit 1
 
-VERSION="2.5.1"
+VERSION="2.5.2"
 VERB="ListRecords"
 CONFIGFILE="/etc/shell-oaiharvester/config.xml"
 INSTALLDIR="/usr/share/shell-oaiharvester"
