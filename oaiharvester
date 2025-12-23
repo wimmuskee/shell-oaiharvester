@@ -226,6 +226,7 @@ checkValidGranularity ${granularity}
 # Checks for a last harvest timestamp (from Identify if first harvest, or
 # previous harvest, and uses it according to the granularity settings.
 if [ ! -z ${LASTTIMESTAMP} ]; then
+	notice "Using last timestamp ${LASTTIMESTAMP} from previous state"
 	checkValidTimestamp ${LASTTIMESTAMP} "YYYY-MM-DDThh:mm:ssZ"
 	URI_FROM=$(getFromArgument ${LASTTIMESTAMP} ${granularity})
 else
@@ -237,13 +238,13 @@ else
 	fi
 	checkValidTimestamp ${earliestdatestamp} ${granularity}
 	URI_FROM=$(getFromArgument ${earliestdatestamp} ${granularity})
-fi
 
-# If FROM is set manually in the config, use that
-# this is useful for debugging purposes
-if [ ! -z ${FROM} ]; then
-	warning "Using manual FROM config override: ${FROM}"
-	URI_FROM="&from=${FROM}"
+	# If FROM is set manually in the config, use that
+	# this is useful for debugging or bootstrapping purposes
+	if [ ! -z ${FROM} ]; then
+		warning "Using manual FROM config override: ${FROM}"
+		URI_FROM="&from=${FROM}"
+	fi
 fi
 
 # Sets the initial harvest uri
