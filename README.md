@@ -1,3 +1,6 @@
+# Migrated
+This repo is now maintained at [Codeberg](https://codeberg.org/wimmuskee/shell-oaiharvester).
+
 # Shell OAI Harvester
 The OAI-PMH Shell Harvester is able to harvest OAI-PMH targets. It supports multiple configurable targets which can be updated individually. Furthermore, it is able to execute a preset command for each record it updates or deletes.
 View the [CHANGELOG](CHANGELOG.md) for important changes.
